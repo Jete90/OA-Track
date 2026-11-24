@@ -245,6 +245,14 @@ matplotlib, pandas, openpyxl, gsw and mocsy 2.4.0; rasterio and GDAL for `ocean_
 | `test_state_constraint.py` | One product, one state (1750): the constrained STATE against the constrained INDICATOR. direct the paper: Omega_arag of every model's 1750 state, regressed on dSST and CU ... |
 | `test_whole_ocean_coverage.py` | 18 November 2026 The three estimates of the whole-ocean adjustment (structural_adjustments.py, step 2) rest on different cells: the |
 
+## Not in this archive
+
+Scripts for the development and the operation of the study on its server (inventories of our disks, memory
+guards, one-off reruns, the set-up of production folders) and dated copies of earlier states of scripts are not
+included, as they are not needed to reproduce the paper. Comments in the code and the notebook still name some
+earlier scripts (for example fig_crossing.py, fig3_crossing.py, and table_summary.py), whose code now lives in
+the notebook or in the scripts of this archive.
+
 ## Licence
 
 MIT licence (`LICENSE`). OA-Track itself is published at SEANOE under CC BY 4.0.
