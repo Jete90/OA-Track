@@ -10,7 +10,8 @@ This archive holds the code of the analysis of the paper and of its data product
 aragonite saturation state (Omega_arag) and the carbonate system from 1750 to 2024 and to 2100, from four
 observation-based fCO2-products and 18 CMIP6 Earth system models, with one consistent carbonate chemistry
 (mocsy 2.4.0) and an emergent constraint on the preindustrial state. OA-Track itself is archived at SEANOE
-([SEANOE DOI]), the output of GFDL-ESM2M-COBALTv2 used here at Zenodo (https://doi.org/10.5281/zenodo.24493378).
+(https://doi.org/10.17882/121840), the output of GFDL-ESM2M-COBALTv2 used here at Zenodo
+(https://doi.org/10.5281/zenodo.24493378).
 
 ## Layout and running
 
