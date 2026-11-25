@@ -66,7 +66,7 @@ MOCSY_OPTB, MOCSY_OPTK1K2 = oa_config.OPTB, oa_config.OPTK1K2   # total boron, K
 
 XCO2_MODEL = 284.317               # CMIP6 piControl
 from pi_states import TARGETS, XCO2_SIGMA, year_targets     # the preindustrial CO2 states (see pi_states.py)
-MAIN_TARGETS = {**TARGETS, 'pi284': XCO2_MODEL}  # pi284: the adjusted piControl itself (check against calc_bias_adjusted)
+MAIN_TARGETS = {**TARGETS, 'pi284': XCO2_MODEL}  # pi284: the adjusted piControl itself (for comparison with calc_bias_adjusted)
 N_ITER_MAX = 8                     # Newton iterations at most
 PCO2_TOL = 1e-4                    # uatm: iterate until max |pCO2 - target| < PCO2_TOL over the valid cells
 VARS = cb.VARS

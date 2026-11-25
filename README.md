@@ -31,7 +31,8 @@ constants). Area weights: `OA_WEIGHTS=ocean` (the paper: cell area times ocean f
    writes the complete output for each fCO2-product, and `python make_indicator_table.py` Supplementary Table 2
    and Supplementary Data 1. OA-Track as archived at SEANOE: `python make_oatrack_product.py --part global` (the
    global means, .nc and .csv), `--part obs_based_products` (the maps of the obs-based products) and
-   `--part esms` (the maps of the ESMs), with the names and descriptions of `oatrack_names.py`;
+   `--part esms` (the maps of the ESMs, which are added to this code and to the record before the paper is
+   published), with the names and descriptions of `oatrack_names.py`;
    `python list_oatrack_names.py` lists every variable, and `python pack_oatrack.py` packs the record (zip of the
    global means, maps, MANIFEST.md5).
 4. The figures and tables: `OA_boundary_figures.ipynb` from top to bottom (open it from `code/`); its last cell
