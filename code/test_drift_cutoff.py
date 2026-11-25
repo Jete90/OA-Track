@@ -20,7 +20,7 @@ Printed per model: piControl length and how close the year parallel to 2024 is t
 spline), the decline piControl mean -> 2014 and -> 2024 (%) with the 50-year spline and the change with every other
 drift estimate (points); then mean and s.d. across the models, and the same from 1850 -> 2024 (the definition of
 test_polar_shift_models). Weights of the run (OA_WEIGHTS), Omega_arag as the chain (mocsy, GLODAP Si and PO4, the
-annual-mean state). Only for us, no figures.
+annual-mean state). No figures.
 Output: data/<run>/structural/drift_cutoff.npz (levels per model, drift estimate and state).
 Usage (code/):  OA_RUN=u74 python -u test_drift_cutoff.py --jobs 4 2>&1 | tee ../logs/u74/test_drift_cutoff.log
 """

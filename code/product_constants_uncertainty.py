@@ -194,7 +194,7 @@ for i, name in enumerate(CASES):
 print(f'{"total":12s} {np.sqrt(sum(r[0] ** 2 for r in rows)):8.4f} {np.sqrt((s17m ** 2).sum()):8.4f} '
       f'{"":9s} {"":9s} {np.sqrt(np.sum(np.square(dds))):9.3f} pp')
 
-# relative 1 sigma (fully correlated, all constants) and effect on the decline, for the notebook (Table S3)
+# relative 1 sigma (fully correlated, all constants) and effect on the decline, for the notebook (Extended Data Table 2)
 OUTD = oa_config.DATA / 'product_uncertainty'
 OUTD.mkdir(parents=True, exist_ok=True)
 OUTF = OUTD / f'constants_UExP_{YEAR}.npz'

@@ -1,9 +1,9 @@
 """
-fill_tools.py  (20 November 2026)
+fill_tools.py
 =============
 Filling of ocean cells without a value from the cells around them, used for the extension of the decline to the whole
-ocean (structural_adjustments.py, test_polar_shift_models.py, test_whole_ocean_coverage.py). Moved here from
-structural_adjustments.py unchanged, so that the ESMs can be filled with the same rule as the fCO2-products.
+ocean (structural_adjustments.py, test_polar_shift_models.py), so that the fCO2-products and the ESMs are filled
+with the same rule.
 
 fill_neighbours: the weighted mean over the 5 x 5 cells around a cell, the 8 direct neighbours with twice the weight
 of the 16 cells of the outer ring, in passes from the edges of a gap inward.
@@ -65,7 +65,7 @@ def fill_neighbours(fields, have, need):
 
 
 def regional_fill(fields, have, need, region, w):
-    """the previous fill, for comparison and for cells fill_neighbours cannot reach: the area mean of the cells
+    """for the cells fill_neighbours cannot reach (and for comparison): the area mean of the cells
     `have` of the same region (Arctic north of 60 N, Southern south of 55 S, other)"""
     fields = [np.array(f, 'f8') for f in fields]
     for g in ('Arctic', 'Southern', 'other'):

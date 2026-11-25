@@ -19,11 +19,11 @@ Omega_arag with mocsy as the chain (test_polar_shift_models.omega), the same cel
 weights of the run. Also the relative shift over two parts of the period, 1850 -> 1950 and 1950 -> 2024: if it is
 about the same in both, scaling it to the decline from 1750 (whose first step, 1750 -> 1850, no model simulates)
 is justified.
-Also (16 Nov 2026) the shift from 1750 itself: the 1750 state of every variant from its 1850 state with surface pCO2
+Also the shift from 1750 itself: the 1750 state of every variant from its 1850 state with surface pCO2
 lowered from 284.317 to 278.3 ppm at constant alkalinity, temperature and salinity (calc_pi_xco2.target_states, as the
 1750 states of the chain), so that rel 1750 -> 2024 needs no scaling of 1850 -> 2024 to 1750.
 Printed per model and as mean and s.d. over the models: rel (% of the decline) and rel x DECLINE (points).
-Only for us, no figures.
+No figures.
 Usage (code/):  OA_RUN=u74 python -u test_polar_smoothing.py 2>&1 | tee ../logs/u74/test_polar_smoothing.log
 """
 import pickle

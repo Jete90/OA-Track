@@ -19,26 +19,20 @@ increase locally, and TA anomalies are redistributed by the circulation).
                        each with the same weight: GFDL-CM4, GFDL-ESM4, UKESM1-0-LL (CMIP6) and GFDL-ESM2M-COBALTv2
                        (ensemble mean of five members, coupled)
   pattern_s0, _s2, _s10  the same with half-widths 0, 2 and 10 cells of the moving mean (sensitivity)
-  pattern_cmip6        the three CMIP6 models only (sensitivity)
   pattern_<model>      each of the three CMIP6 feedback models alone (sensitivity; ESM2M alone: pattern_esm2m)
   GFDL-ESM2M-COBALTv2  five members (historical to 2005, then RCP2.6; perturbed initial conditions; one piControl,
                        1700-2100, on the same calendar years; before 1860 atmospheric CO2 at the 1860 level and only
-                       land use changing, so 1860-2014 is the forced period), three experiments: coupled; noRAD
-                       (radiation at the 1860 CO2, carbon chemistry sees the rising CO2: the feedback without climate
-                       change); noBGC (the reverse: climate change, freshwater and circulation, without the feedback).
-    pattern_esm2m      coupled, all forcings
-    pattern_esm2m_fb   noRAD: the feedback alone, carried by the circulation, without freshwater effects
-    pattern_esm2m_cmb  coupled minus noBGC: the feedback with the circulation changes
-                       (the experiments are regressed on the coupled ensemble-mean series, so their maps add up)
+                       land use changing, so 1860-2014 is the forced period), all forcings (experiment coupled)
+    pattern_esm2m      the ensemble mean of the five members
 
-Time series (added 7 November 2026, for the time course of the alkalinity adjustment in structural_adjustments.py):
+Time series, for the time course of the alkalinity adjustment in structural_adjustments.py:
 the common-area mean of the drift-corrected annual surface nTA of every feedback model, umol/kg: the CMIP6 models
 1850-2014 (historical) and 2015-2100 for every scenario they have (series_<model>_historical, series_<model>_<ssp>,
 with years_historical, years_<model>_<ssp>), and GFDL-ESM2M-COBALTv2 1860-2099 (historical to 2005, then RCP2.6) as the ensemble
-mean of the five members for coupled, noRAD and noBGC (series_esm2m_<exp>, years_esm2m). The patterns are unchanged
-(slopes over 1850-2014 and 1860-2014).
+mean of the five members (series_esm2m_coupled, years_esm2m). The patterns are the slopes over 1850-2014 (CMIP6) and
+1860-2014 (GFDL-ESM2M-COBALTv2).
 
-Printed: the slope maps by latitude band, the shares of the experiments, the patterns by band, area-weighted spatial
+Printed: the slope maps by latitude band, the patterns by band, area-weighted spatial
 correlations, the series' changes.
 
 Usage (code/):  OA_RUN=u74 python -u feedback_pattern.py
@@ -63,7 +57,7 @@ DEST = oa_config.DATA / 'structural'
 FEEDBACK = ('GFDL-CM4', 'GFDL-ESM4', 'UKESM1-0-LL')    # constraint_refs.ALK_MODELS
 PERIOD_CMIP = (1850, 2014)
 ESM2M_DIR = oa_config.ESM2M_DIR
-ESM2M_EXPS = ('coupled', 'noRAD', 'noBGC')
+ESM2M_EXPS = ('coupled',)
 ESM2M_SCEN = 'climate_change_RCP26'
 ESM2M_MEMBERS = ('ens2', 'ens3', 'ens4', 'ens5', 'ens6')
 ESM2M_NAME = 'GFDL-ESM2M-COBALTv2'
@@ -384,26 +378,17 @@ def main():
           '(common-area mean = share; by latitude):')
     for exp, S_ in S.items():
         print(f'    {exp:8s} {amean(S_, cmask, w):+.2f}; {fmt(bands(S_, ocean, w, lat))}; {screen(S_, ocean, w, lat, lon)}')
-    if 'noRAD' in S and 'noBGC' in S:
-        sm_ = S['noRAD'] + S['noBGC']
-        print(f'    noRAD + noBGC {amean(sm_, cmask, w):+.2f}; {fmt(bands(sm_, ocean, w, lat))}  (linearity: close to coupled)')
     raws[ESM2M_NAME] = S['coupled']
     members4 = FEEDBACK + (ESM2M_NAME,)
 
     # the patterns (all with negative values kept)
     raw4 = np.nanmean([raws[m] for m in members4], axis=0)
-    raw3 = np.nanmean([raws[m] for m in FEEDBACK], axis=0)
     pats = {'pattern': ('four models (used)', raw4, SMOOTH)}
     for k_ in SMOOTH_TESTS:
         pats[f'pattern_s{k_}'] = (f'four models, half-width {k_}', raw4, k_)
-    pats['pattern_cmip6'] = ('three CMIP6 models', raw3, SMOOTH)
     pats['pattern_esm2m'] = ('ESM2M coupled, all forcings', S['coupled'], SMOOTH)
-    for m_ in FEEDBACK:                    # each CMIP6 feedback model alone (sensitivity, 16 Nov 2026)
+    for m_ in FEEDBACK:                    # each CMIP6 feedback model alone (sensitivity)
         pats[f'pattern_{m_}'] = (f'{m_} alone', raws[m_], SMOOTH)
-    if 'noRAD' in S:
-        pats['pattern_esm2m_fb'] = ('ESM2M noRAD, feedback alone', S['noRAD'], SMOOTH)
-    if 'noBGC' in S:
-        pats['pattern_esm2m_cmb'] = ('ESM2M coupled - noBGC', S['coupled'] - S['noBGC'], SMOOTH)
     out = dict(lat=lat, lon=lon, models=np.array(members4), members=np.array(ESM2M_MEMBERS), smooth=SMOOTH,
                created=str(datetime.datetime.now()))
     print('  patterns (common-area mean 1; share of the ocean negative; by latitude):')

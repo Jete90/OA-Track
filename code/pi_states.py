@@ -2,7 +2,7 @@
 pi_states.py
 ============
 The preindustrial CO2 states (atmospheric xCO2, ppm) used in the paper, shared by calc_pi_xco2.py (which
-computes Omega_arag for each of them with mocsy) and table_summary.py.
+computes Omega_arag for each of them with mocsy) and the notebook (Extended Data Table 1).
 
 AR6 (Gulev et al. 2021, Ch. 2): 278.3 +- 2.9 ppm in 1750 and 285.5 +- 2.1 ppm in 1850, very likely ranges
 (the chapter's convention) -> 1 sigma = range / 1.645. '_lo'/'_hi' = -/+ 1 sigma, for the uncertainty of each
@@ -10,7 +10,7 @@ state. 'mid' = midpoint of 1750 and 1850 (sigma = mean of the two: correlated ic
 effective preindustrial CO2 of Jiang et al. (2023): the CMIP6 forcing of their 1850 state (1850-1854 mean
 284.59 ppm, Meinshausen et al. 2017) minus their ice-core difference 1852 - 1752 (288.57 - 276.39 ppm).
 'x280' = the nominal CO2 of the original boundary (Guinotte and Fabry 2008). 'pi_low'/'pi_high' (275,
-284 ppm): the earlier sensitivity range, kept for compatibility.
+284 ppm): a sensitivity range, printed by constraint_refs.py.
 
 The data product (calc_product_states.py) does not use per-model states of other years: the years 1750-1849 are
 computed at the CO2 of each year (CMIP6 history, Meinshausen et al. 2017) on the constrained monthly climatology

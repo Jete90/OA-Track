@@ -10,7 +10,7 @@ carbonate_system_<reference>.nc:
                    1990, UExP its first year; Jiang: the decade state 2005-2014); no blend, a hard switch
                    (source flag 1, 2, 4). Constrained = regional state constraint; unconstrained = multi-model mean
                    state; both with 1 sigma (model years: fit, observed predictors, CO2; product years: the level
-                   uncertainty of the product is a global attribute, see Table S3)
+                   uncertainty of the product is a global attribute, see Extended Data Table 2)
     global series  two constrained versions on the product's own area and on the common area of the paper:
                    _global (the global constraint, the paper's method, the regression of the global means applied
                    in every cell) and _map (the area mean of the regional maps); _unconstrained; product years: the

@@ -24,7 +24,7 @@ correlation is kept:
 The constrained 1750 value moves by dOmega_1750 = dOmega (bias adjustment) + beta_CUC dCUC (the constraint), with
 beta_CUC the coefficient of CUC in the regression of the models' 1750 Omega_arag on dSST and CUC. The script reports
 var(Omega_1750) = var(Omega) + beta^2 var(CUC) + 2 beta cov(CUC, Omega) and the correlation, which the notebook
-(Fig. 4 cell, Tables S1 and S3) combines with the 2024 mapping uncertainty (product_uncertainty_mc_C.py).
+(preparation cell, Extended Data Tables 1 and 2) combines with the 2024 mapping uncertainty (product_uncertainty_mc_C.py).
 
 The set value of constraint_refs.CUC_SIG (0.001, the difference between two products on the common mask, already
 contained in the spread across the products) is printed for comparison.

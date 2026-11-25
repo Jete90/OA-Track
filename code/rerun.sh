@@ -1,10 +1,10 @@
 #!/bin/bash
-# Full run of the OA_boundary chain (version 2) for one run of oa_config.py:   ./rerun.sh u74   (likewise l10,
+# Full run of the OA_boundary chain for one run of oa_config.py:   ./rerun.sh u74   (likewise l10,
 # m10, m10l10). Everything is computed into data/<run>. Inputs that depend neither on the model DIC/ALK nor on
 # the chemistry (linked CMIP6 files raw/, GLODAP nutrients and product links obs/, Jiang et al. 2023, Findlay
 # et al. 2025, NOAA CO2) are linked from inputs/. Stops at the first error. Logs in logs/<run>.
 #
-# Order (version 2): the drift is computed before the bias adjustment, because the adjusted state of both
+# Order: the drift is computed before the bias adjustment, because the adjusted state of both
 # experiments is drift-corrected; the preindustrial states come from the monthly adjusted piControl.
 set -e
 RUN=$1

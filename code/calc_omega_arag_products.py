@@ -16,7 +16,7 @@ the models share one chemistry:
 Per product: annual Omega_arag of the annual-mean state (mocsy on the annual means of T, S, DIC,
 TA, as for the CMIP6 models, whose inputs are annual means), only where all 12 months are valid
 (monthly Omega_arag within (0, 20)), years with less than half the usual coverage dropped, and a
-fixed mask of cells valid in every remaining year. Kept for comparison: the mean of the twelve
+fixed mask of cells valid in every remaining year. Also stored: the mean of the twelve
 monthly Omega_arag (omega_arag_monthly_mean) and the mean of the product's own monthly Omega
 (omega_arag_product, where provided; compare it with omega_arag_monthly_mean for the constants).
 

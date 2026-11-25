@@ -1,6 +1,6 @@
 #!/bin/bash
 # run_production.sh: the whole chain of one run, from the raw model output to the data product with its add-on,
-# unattended, stopping at the first failing step (nothing runs on stale input). Start from code/ in env_jens:
+# unattended, stopping at the first failing step (nothing runs on stale input). Start from code/:
 #   mkdir -p ../logs/u74; JOBS=4 nohup ./run_production.sh u74 > ../logs/u74/run_production.out 2>&1 &
 # (stdout to run_production.out, not to run_production.log: log() appends to the master log itself)
 # Steps (each with its own log in logs/<run>/, the master log run_production.log):
@@ -12,7 +12,6 @@
 #                         six sensitivity runs of structural_adjustments.py
 #   4 make_product_alkalinity.py   the add-on per reference (in parallel), then the combined files
 #   5 patch_product_xco2.py        the CO2 of the product and scenario years
-#   6 summarize_product.py, diagnose_product.py   the text summaries and the check of the files
 # Afterwards: the notebook (OA_boundary_figures_*.ipynb) top to bottom, and the tar of data/<run>/figures/manuscript.
 # JOBS: processes in parallel inside the steps (default 4); REFS to restrict the product steps; SKIP="1 2" to skip
 # steps already complete (their outputs are then used as they are). PARALLEL_REFS=0: the references of step 2 one
@@ -88,10 +87,4 @@ if skip 5; then log "5 xco2 patch skipped (SKIP)"; else
     log "5 done"
 fi
 
-if skip 6; then log "6 summaries skipped (SKIP)"; else
-    log "6 summaries and the check of the files"
-    python -u summarize_product.py > "$L/summarize_product.log" 2>&1 || log "6 summarize_product.py failed, see the log (not fatal)"
-    python -u diagnose_product.py --models > "$L/diagnose_product.log" 2>&1 || log "6 diagnose_product.py failed, see the log (not fatal)"
-    log "6 done; sections A to F of $L/diagnose_product.log should report none or explain what is left"
-fi
-log "all done: now the notebook, then tar czf ~/oa_figures.tgz -C $DATA/figures manuscript"
+log "all done: now the notebook"

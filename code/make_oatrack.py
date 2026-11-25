@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """
-make_oatrack.py  (data product OA-Track: the files of the release)
+make_oatrack.py  (data product OA-Track: the complete output for each fCO2-product, from which make_oatrack_product.py writes the archived record)
 ===============
-Writes OA-Track, the data product of the paper (Supplementary Methods, 'the data product OA-Track'), from the files
-of the chain: the constrained states (calc_product_states.py: states_<ref>_{pi,hist,<ssp>,pi_<ssp>}.nc), the
+Writes the complete output of OA-Track, the data product of the paper (Supplementary Methods, 'the data product
+OA-Track'), from the files of the chain: the constrained states (calc_product_states.py:
+states_<ref>_{pi,hist,<ssp>,pi_<ssp>}.nc), the
 indicators of the observation-based estimates (calc_product_obs.py: obs_<ref>.nc) and the alkalinity adjustment
 (structural_adjustments.npz, feedback_pattern.npz, as make_product_alkalinity.py). The internal files of the chain
 (carbonate_system_*.nc of make_product.py, with the switch from the models to the products, used by the figures of
@@ -75,8 +76,8 @@ import numpy as np
 
 # Chunk caches. netCDF-C keeps up to 64 MB of uncompressed chunks per variable (the default of netCDF 4.10) for every
 # variable of every open file, and a written chunk can stay there until the file is closed. With the 3574 variables of
-# a file, written year by year in two versions, that used up the 192 GB of oceandata02 on 14/15 November 2026 (five
-# references in parallel). Reading: at most 8 MB per variable (every file is read map by map); writing: two maps per
+# a file, written year by year in two versions, this can exceed the memory of a large server when several
+# references run in parallel. Reading: at most 8 MB per variable (every file is read map by map); writing: two maps per
 # variable (write_cache), so that a written map goes to the disk as soon as the next one comes.
 netCDF4.set_chunk_cache(8 * 2 ** 20, 521, 0.75)
 

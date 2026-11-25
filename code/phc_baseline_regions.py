@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-phc_baseline_regions.py  (18 November 2026)
+phc_baseline_regions.py
 =======================
 Do the observation-based estimates of the Planetary Health Check (2026) differ more outside our common area? In
-the step from its areas to the common area (Fig. 3c, 0.9 percentage points), only 0.3 come from the cells that only
-UExP-FNN-U has (phc_area.py). Test whether the other 0.6 come from a larger difference between the two observational
+the step from its areas to the common area (Fig. 3c), only a part comes from the cells that only UExP-FNN-U has
+(phc_area.py). Test whether the rest comes from a larger difference between the two observational
 baselines outside the common area. All on the UExP-FNN-U grid with the weights of its file (area x mask_sfc), on the
 cells both have, split into the common area and the rest:
   UExP-FNN-U, mean of the 12 months of 2024 and of 2005-2014 (cells with all months);

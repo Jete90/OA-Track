@@ -899,7 +899,7 @@ def main():
         if key in groups:
             later.append((a.reference, scen, groups[key]))
         else:
-            # a complete scenario of the same set from an earlier run can serve as the source
+            # a scenario of the same models that is already complete on disk can serve as the source
             done = [s for s in SCENARIOS if s != scen and s not in a.part
                     and complete(OUT / f'states_{a.reference}_{s}.nc', have, YEARS_SSP[YEARS_SSP < cs.SCEN_FIRST])
                     and scenario_models(names, members, s) == have]

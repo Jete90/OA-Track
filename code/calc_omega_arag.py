@@ -3,8 +3,8 @@
 calc_omega_arag.py
 ==================
 Surface aragonite saturation state (Omega_arag) for the CMIP6 historical and
-piControl runs linked by prepare_inputs.sh, computed with mocsy 2.0
-(Orr and Epitalon, 2015) in the same set-up as Constraints/v2/calc_cuc.py:
+piControl runs linked by prepare_inputs.sh, computed with mocsy 2.4
+(Orr and Epitalon, 2015):
 
   - top level (5 m) of the files in CMIP6_DATA, which are already on r360x180
     (remapdis) and standard depth levels
@@ -65,7 +65,7 @@ GRID = 'r360x180'
 EXPERIMENTS = ('historical', 'piControl')
 VARS = ('thetao', 'so', 'dissic', 'talk')
 CHUNK = 60            # time steps per mocsy call, multiple of 12
-OMEGA_MAX = 20.0      # cull as the Revelle cull in calc_cuc.py
+OMEGA_MAX = 20.0      # larger values are not a valid carbonate system and are set to missing
 PH_RANGE = (6.0, 10.0)   # a carbonate system mocsy solved (below about -5 degC and for DIC >= TA it returns pH -19.6,
                          # pCO2 24,500 uatm, Omega 0.002, Revelle 0 without a fill value)
 FLOORED = [0, 0]         # cells set to the freezing point, cells passed (floor_temperature; per process)
@@ -193,7 +193,7 @@ def check_range(a, name, tag):
 
 # Models that carry DIC and alkalinity per kg and write the CMIP6 mol m-3 output as tracer * constant density
 # (kg m-3). All other models: per-volume tracers (or per kg written with in-situ density), converted with the
-# in-situ density as before.
+# in-situ density.
 REF_DENSITY = oa_config.REF_DENSITY   # GFDL-CM4/-ESM4: 1035 (RHO_0 in generic_BLING/COBALT.F90); oa_config.py
 
 

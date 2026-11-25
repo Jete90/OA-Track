@@ -13,19 +13,18 @@ calc_product_states.py does with the window of a reference; here without the bia
 Omega_arag with mocsy (constants of the chain, GLODAP Si and PO4) of the annual-mean state (mean of the monthly
 slots) in 1850, 2014 and 2024 (from the series continued with the scenario; the scenarios differ little by 2024), and
 in 1750, which no model simulates: the 1850 state with surface pCO2 lowered from 284.317 to 278.3 ppm at constant
-alkalinity, temperature and salinity (calc_pi_xco2.target_states), as the 1750 states of the chain (since 16 Nov
-2026; before, the shift 1850 -> 2024 was scaled to the decline from 1750, which gave 0.005 points less).
+alkalinity, temperature and salinity (calc_pi_xco2.target_states), as the 1750 states of the chain.
 Masks: common area (constraint_results.pkl), the ocean of the paper (regional_common.ocean_on: every cell any product
 covers, without inland seas) and every ocean cell of the model; the same cells in all years.
 Printed per model: area means of the common area and the ocean, the relative gap of the level ocean / common - 1 in
 1750 and 2024, the declines 1750 -> 2024 and the shift ocean minus common area (points, relative to the decline);
 1750 -> 1950, 1750 -> 2000 and 1750 -> 2014 (historical only) and 1850 -> 2024 as checks. Then mean and sd across the models.
-Since 20 Nov 2026 also levels_filled: every model's Omega_arag of each year put onto the grid of the products
+Also levels_filled: every model's Omega_arag of each year put onto the grid of the products
 (nearest cell) and filled to the ocean of the paper where the model has no value (fill_tools, as the products and
 Jiang et al. in structural_adjustments.py), area means of the common area and the ocean with the weights of the
 products' grid. structural_adjustments.py takes the models' shift and the spread of the level gap from these, so
 that the three estimates of the whole-ocean adjustment rest on the same ocean. The means on the model's own cells
-(levels) stay for comparison.
+(levels) are stored as well.
 
 Output: data/<run>/structural/polar_models.npz, levels(model, mask, year) of the area means on the model's own
 cells, levels_filled(model, mask, year) with the model filled to the ocean of the paper, and the metadata.

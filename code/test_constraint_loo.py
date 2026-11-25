@@ -20,13 +20,12 @@ local dSST and CUC (cell-by-cell constraint), area-weighted over the cells; also
 the constraint helps.
 
 Data: constraint_results.pkl (predictors per model and per cell, the Omega_arag of 1750) and, for the other
-indicators, the xco2 files of calc_pi_xco2.py version 2 (<indicator>_<state>_mean per model). With an old
-production folder only Omega_arag is available (from the pkl).
+indicators, the xco2 files of calc_pi_xco2.py (<indicator>_<state>_mean per model).
 
 Usage:  python test_constraint_loo.py --data ../data/u74
-        python test_constraint_loo.py --data .../OA_boundary_production_v2/data/u74 --reference OceanSODA UExP
-        OA_RUN=u74 python test_constraint_loo.py --data .../OA_boundary_production/data/u74 --mechanism
-            (all indicators now, from the mechanism files; run in the code folder of that production)
+        python test_constraint_loo.py --data ../data/u74 --reference OceanSODA UExP
+        OA_RUN=u74 python test_constraint_loo.py --data ../data/u74 --mechanism
+            (all indicators from an approximate 1750 state built from the mechanism and drift files)
         options: --state 1750 (any state of the xco2 files), --no-cells (global only, fast), --nrand 200
         in a notebook: %run test_constraint_loo.py --data ...
 """
@@ -95,8 +94,8 @@ def model_values(R, data, ref, state):
         if ind == 'omega_arag' and 'omega_arag' in out:
             d = np.max(np.abs(g - out['omega_arag'][0]))
             print(f'  {ref}: Omega_arag {state} from the xco2 files against the pkl: max |difference| {d:.1e}'
-                  + ('' if d < 1e-3 else ' (expected for an old folder, whose xco2 files hold another quantity; the '
-                     'pkl values are used, and the other indicators of these files are not trustworthy)'))
+                  + ('' if d < 1e-3 else ' (the xco2 files do not match the pkl: the pkl values are used, the other indicators of these '
+                     'files are not trustworthy)'))
             continue
         out[ind] = (g, F)
     return out
@@ -298,7 +297,7 @@ def main():
                          'the indicators; spread printed in units, not in %%')
     ap.add_argument('--mechanism', action='store_true',
                     help='all indicators from an approximate 1750 state built from the mechanism and drift files '
-                         '(for a folder without the v2 xco2 files; run in its code folder with OA_RUN set)')
+                         '(run in the code folder with OA_RUN set)')
     ap.add_argument('--nrand', type=int, default=200, help='realisations of the random-predictor test')
     a, _ = ap.parse_known_args()
     with open(Path(a.data) / 'constraint_results.pkl', 'rb') as f:

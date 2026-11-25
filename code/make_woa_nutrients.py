@@ -8,8 +8,8 @@ climatologies (i_an, p_an; months 01 to 12, not the annual or seasonal files) at
 in umol/kg, on the WOA grid (lat -89.5..89.5, lon -179.5..179.5; --lon360: 0.5..359.5). nutrient_sensitivity.py
 matches the grids by coordinate, so the longitude convention does not change its results.
 
-A cell takes the mean over the months with a value (as the files used so far); --strict requires all 12 months.
-If the output files exist already, the new fields are compared with them first (maximum difference, cells only in
+A cell takes the mean over the months with a value; --strict requires all 12 months.
+If the output files exist already, the fields are compared with them first (maximum difference, cells only in
 one of them) and the files are rewritten only with --force.
 
 Input:  <OBS_DIR>/WOA2023/{silicate,phosphate}/woa23_all_{i,p}MM_01.nc  (MM = 01 .. 12)

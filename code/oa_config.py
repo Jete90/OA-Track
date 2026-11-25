@@ -17,26 +17,26 @@ starts, e.g. by rerun.sh, or in the first notebook cell); it sets
   WEIGHTS      the area weights of every mean and area on the 1-degree product grid (OA_WEIGHTS in the environment):
                'ocean' (default): cell area (cos latitude) times the ocean fraction of the cell from the ESA CCI Land
                Cover ocean map (inputs/ESACCI_water_bodies/ocean_fraction_1deg.nc, ocean_fraction_1deg.py), so that coastal cells count
-               by their sea surface; 'cell': the cell area alone (the weights of version 3). area_weights(lat, lon)
+               by their sea surface; 'cell': the cell area alone. area_weights(lat, lon)
                gives the weights of a grid. Diagnostics printed on the native model grids (raw Omega, drift, model
                SST) use the cell area in both cases.
 
 u74 is the main run of the paper; l10, m10 and m10l10 are the sensitivity runs to the carbonate constants.
 regional_common.py (figures, tables) uses RUNS for the folders and chooses the run itself from OA_RUN.
 
-Version 2 of the chain (November 2026): the adjusted model state is the same for both experiments and every
+The adjusted model state is the same for both experiments and every
 reference, X(t) - [s(k(t)) - mean of s over the window years] + bias, with s the Enting spline of the
 piControl (calc_drift.py); the preindustrial states are computed from the adjusted piControl with DIC
 lowered cell by cell to the target CO2 (calc_pi_xco2.py), no global factors.
 
 Time step: the code handles monthly and annual model output (calc_bias_adjusted.ModelRun.step, 12 or 1). All 18
-CMIP6 models of this study are ANNUAL MEANS (step 1, check_time_step.py), so wherever docstrings, comments or
+CMIP6 models of this study are ANNUAL MEANS (step 1), so wherever docstrings, comments or
 netCDF attributes say 'month' or 'monthly', read 'time step': the bias is one annual field, the preindustrial
 state is the mean over all control years, and the 12 'monthly climatology' slots of calc_pi_xco2.py and
 calc_product_states.py are identical copies of the time mean. The observed Omega_arag (calc_omega_arag_obs.py,
 calc_omega_arag_products.py, calc_product_obs.py) is the saturation state of the annual-mean T, S, DIC and TA,
-the same definition as for the models (5 November 2026; before, the mean of the monthly saturation states,
-0.002 higher, stored as omega_arag_monthly_mean).
+the same definition as for the models (the mean of the monthly saturation states, 0.002 higher, is stored as
+omega_arag_monthly_mean).
 """
 import math
 import os

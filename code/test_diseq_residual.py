@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-test_diseq_residual.py  (18 November 2026)
+test_diseq_residual.py
 ======================
 Does the third control of the simulated carbon uptake, how closely surface waters follow the rising atmospheric CO2,
 explain the part of the model spread that CUC and dSST leave unexplained?
@@ -12,13 +12,13 @@ the piControl run, umol/kg, degC, psu, on the OceanSODA grid):
   the change of the air-sea disequilibrium  dD = dpCO2_ocean - dpCO2_air  (uatm),
   with pCO2_air = xCO2 (1 - pH2O) at 1 atm, xCO2 the CMIP6 history (1983-2014 mean; the piControl at 1850),
   and the ratio  dpCO2_ocean / dpCO2_air  (1 = the surface follows the atmosphere fully),
-area mean on the common area with the weights of the run (as test_r2_mechanism.py).
+area mean on the common area with the weights of the run.
 Then, across the models, with y = bias-adjusted 1750 Omega_arag and d(DIC-ALK) of constraint_results.pkl / the
 mechanism files:
   R2 of y ~ CUC + dSST, of y ~ CUC + dSST + dD, and of y ~ dD alone; the same for d(DIC-ALK);
   the correlation of dD with the residual of y ~ CUC + dSST (how much of the unexplained part it carries),
   and its correlation with CUC and dSST (how much of it the two predictors already contain).
-Also (18 Nov, second version): the levels of the disequilibrium, present-day (1983-2014) D_hist and piControl D_pi,
+Also the levels of the disequilibrium, present-day (1983-2014) D_hist and piControl D_pi,
 with their spread across the models, and the same regressions with D_hist instead of dD (could the present-day
 disequilibrium, which the fCO2-products observe, stand in for the change, i.e. is D_pi similar across the models?),
 and the observed D_hist of OceanSODA-ETHZ (its 1983-2014 mean state, data/mechanism/state_OceanSODA.nc) on the
@@ -36,9 +36,22 @@ import calc_omega_arag_obs as co
 import co2_history
 import mocsy
 import oa_config
-from test_alk_diseq_models import ph2o, series
 
 REF, WIN = 'OceanSODA', (1983, 2014)
+
+
+def series(r):
+    """(years, values) from a co2_history return value (dict, tuple or 2-column array)"""
+    if isinstance(r, dict):
+        y = np.array(sorted(r)); return y.astype(int), np.array([r[k] for k in y], 'f8')
+    if isinstance(r, tuple) and len(r) == 2:
+        return np.asarray(r[0]).astype(int), np.asarray(r[1], 'f8')
+    a = np.asarray(r, 'f8'); return a[:, 0].astype(int), a[:, 1]
+
+
+def ph2o(t, s):
+    tk = t + 273.15
+    return np.exp(24.4543 - 67.4509 * (100 / tk) - 4.8489 * np.log(tk / 100) - 0.000544 * s)
 
 
 def r2(y, *xs):

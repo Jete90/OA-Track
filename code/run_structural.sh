@@ -1,14 +1,13 @@
 #!/bin/bash
-# run_structural.sh: the structural adjustments of the decline, in order (start from code/ in env_jens):
+# run_structural.sh: the structural adjustments of the decline, in order (start from code/):
 #   OA_RUN=u74 nohup bash run_structural.sh > ../logs/u74/run_structural.log 2>&1 &
-#   OA_RUN=u74 nohup bash run_structural.sh polar > ../logs/u74/run_structural.log 2>&1 &   (pattern and sampling kept)
+#   OA_RUN=u74 nohup bash run_structural.sh polar > ../logs/u74/run_structural.log 2>&1 &   (the pattern and the sampling as they are)
 #   OA_RUN=u74 nohup bash run_structural.sh structural > ../logs/u74/run_structural.log 2>&1 &   (step 3 only)
 # 1 test_polar_shift_models.py (writes polar_models.npz) and feedback_pattern.py side by side (independent);
 #   with "polar" only test_polar_shift_models.py; skipped with "structural"
-# 2 barrett_sampling.py (prints p with the new pattern); skipped with "polar" and "structural"
-# 3 structural_adjustments.py (central; reads polar_models.npz, feedback_pattern.npz, barrett_sampling.npz) and ten
-#   pattern sensitivities side by side: CMIP6 only, ESM2M coupled minus noBGC, each of the four feedback models alone,
-#   three smoothings, uniform
+# 2 barrett_sampling.py (prints p with the pattern); skipped with "polar" and "structural"
+# 3 structural_adjustments.py (central; reads polar_models.npz, feedback_pattern.npz, barrett_sampling.npz) and eight
+#   pattern sensitivities side by side: each of the four feedback models alone, three smoothings, uniform
 # Stops at the first failing step, so that nothing runs on stale input.
 set -e
 cd "$(dirname "$0")"
@@ -16,8 +15,6 @@ export OA_RUN=${OA_RUN:-u74}
 MODE=${1:-all}
 L=../logs/$OA_RUN
 mkdir -p "$L"
-[ -f "$L/test_polar_shift_models.log" ] && [ ! -f "$L/test_polar_shift_models_windowmeans.log" ] && \
-    cp "$L/test_polar_shift_models.log" "$L/test_polar_shift_models_windowmeans.log"
 
 if [ "$MODE" = structural ]; then
     echo "$(date '+%F %T') step 1 and 2 skipped (polar test, pattern and sampling kept)"
@@ -43,7 +40,7 @@ done
 echo "$(date '+%F %T') step 3: structural_adjustments.py, central and sensitivities"
 pids=()
 python -u structural_adjustments.py > "$L/structural_adjustments.log" 2>&1 & pids+=($!)
-for p in pattern_cmip6 pattern_esm2m_cmb pattern_esm2m pattern_GFDL-CM4 pattern_GFDL-ESM4 pattern_UKESM1-0-LL pattern_s0 pattern_s2 pattern_s10 uniform; do
+for p in pattern_esm2m pattern_GFDL-CM4 pattern_GFDL-ESM4 pattern_UKESM1-0-LL pattern_s0 pattern_s2 pattern_s10 uniform; do
     python -u structural_adjustments.py --pattern $p > "$L/structural_adjustments_$p.log" 2>&1 & pids+=($!)
 done
 fail=0

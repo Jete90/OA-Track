@@ -57,7 +57,7 @@ def window_drift(data, model, member, window, lat, lon):
     """{v: (ny, nx)} the piControl drift over the years parallel to the window, minus the piControl mean, on the grid
     lat, lon (nearest neighbour), from drift_tools.Drift.window_mean: the same function as the constraint
     (constraint_refs.drift_means) and the data product, so that a window needs no period stored in the drift file
-    (the stored ones are only those of calc_drift.py; UExP-FNN-U has its own window 1980-2014 since 12 Nov 2026)"""
+    (the stored ones are only those of calc_drift.py; UExP-FNN-U has its own window 1980-2014)"""
     import drift_tools as dt
     path = dt.drift_path(model, member)
     if path.resolve() != (Path(data) / 'drift' / path.name).resolve():

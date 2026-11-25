@@ -240,7 +240,7 @@ def main():
     fp = DEST / 'feedback_pattern.npz'
     if fp.exists():
         z = np.load(fp)
-        key = 'pattern' if 'pattern' in z.files else 'pattern_cmip6'
+        key = 'pattern'
         pat = np.asarray(z[key], 'f8')
         pm = lambda n: float(np.sum(np.where(np.isfinite(pat), n * pat, 0)) / np.sum(np.where(np.isfinite(pat), n, 0)))
         print(f'  p with {key} (mean of the pattern over the measurements): '

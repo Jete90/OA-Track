@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 """
-fig_box_schematic.py  (draft of the schematic for Box 1: the method and what can go wrong)
+fig_box_schematic.py  (the schematic of Box 1: the method and what can go wrong)
 ====================
 a  the method: observed state of an fCO2-product minus the change simulated by each ESM gives one preindustrial state
    per ESM; the emergent constraint (observed dSST and CUC) selects the constrained 1750 state; both states on the
    same area with the same equilibrium constants, so that an error of the constants or of the observational
    baseline shifts both alike and cancels in the decline.
 b  what can go wrong: four inconsistencies between the two states, each with the shift of the decline found for the
-   Planetary Health Check (main text, Fig. 3c in nine steps, 18 Nov 2026): area +0.2 (the 5 % of cells only the 2024
+   Planetary Health Check (main text, Fig. 3c in nine steps): area +0.2 (the 5 % of cells only the 2024
    state covers), observational baseline +0.8, constants -0.3 (net, in the other direction), CO2 of 1750 (272 instead
    of 278.3 ppm) +1.0 percentage points. Bar heights are schematic, the
    shifts are exaggerated so that they can be seen; the numbers give the real shifts.

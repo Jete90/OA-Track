@@ -11,12 +11,11 @@ first so that the slow part happens there.
                             DIC and ALK, as the 2024 maps of the data product), surface pCO2 raised with the atmosphere at fixed ALK and S (DIC by Newton
                             iteration with mocsy, as in calc_pi_xco2.py), with fixed T ('fixed') and with T rising
                             with CO2 at the observed rate of 1990-2024 ('scaled'); x in ppm
-                            -> fig_crossing_projection.pkl  (Figs. 1 and 3, the crossing against CO2)
+                            -> fig_crossing_projection.pkl  (Figs. 1 and 4, the crossing against CO2)
     regional_projection()   the same per cell, T rising with CO2 -> fig_regional_crossing_projection.pkl (common area);
-                            regional_projection('results'): each product on its own area -> ..._own.pkl (Fig. 3 maps)
+                            regional_projection('results'): each product on its own area -> ..._own.pkl (Fig. 4 maps)
     noaa_co2()              {year: ppm} of the NOAA global annual mean (downloaded once to co2_annmean_gl.txt)
 
-The code is the code of the former figure cells, unchanged.
 """
 import os
 import pickle
@@ -33,7 +32,7 @@ import oa_config
 _WTAG = ('' if oa_config.WEIGHTS == 'ocean' else f'_{oa_config.WEIGHTS}') + '_fit2024'   # caches keyed by the weights and the start
 
 STATE_YEAR = 2024                    # the projections start from the forced (fitted) state of this year
-STATE_OLD = (2020, 2024)             # the former start, the 2020-2024 mean state: printed for comparison only
+STATE_OLD = (2020, 2024)             # the 2020-2024 mean state as the start: printed for comparison only
 TREND = (1990, 2024)                 # period for the observed warming per ppm (k_T)
 XMAX = 480.0                         # right end of the global projection (ppm)
 XS = np.arange(0.0, XMAX - 300.0, 2.0)   # global: ppm above the state
@@ -74,7 +73,7 @@ def _results(which='results_common'):
 def _state(r, ref, xco2):
     """the forced 2024 state of a product on the mask of r (common or own area): in every cell the quadratic fit of the
     annual means of the product's record up to STATE_YEAR, evaluated in STATE_YEAR (mp.quad_fit_year, as the 2024 maps
-    of the data product, make_product.py); its warming per ppm over TREND; and, for comparison, the former start, the
+    of the data product, make_product.py); its warming per ppm over TREND; and, for comparison, the
     STATE_OLD mean state"""
     cb.set_reference(ref)
     lat, lon, m = np.asarray(r['lat'], 'f8'), np.asarray(r['lon'], 'f8'), np.asarray(r['mask']).astype(bool)
@@ -138,7 +137,7 @@ def global_projection():
         proj[ref] = dict(x=S['x_state'] + XS, x_state=S['x_state'], k_T=S['k_T'],
                          fixed=np.array([gmean(_omega(c, p0, dx, 0.0)) for dx in XS]) + shift,
                          scaled=np.array([gmean(_omega(c, p0, dx, S['k_T'])) for dx in XS]) + shift)
-        # comparison with the former start (the STATE_OLD mean state): decline per ppm over the first 10 ppm
+        # comparison with the STATE_OLD mean state as the start: decline per ppm over the first 10 ppm
         co_ = S['cells_old']
         p0o, om0o, _ = cpx.mvars_cells(co_['t0'], co_['s0'], co_['d0'], co_['a0'], co_['sil'], co_['phos'], co_['la'])
         rate = lambda c_, p_: (gmean(_omega(c_, p_, 0.0, S['k_T'])) - gmean(_omega(c_, p_, 10.0, S['k_T']))) / 10.0
@@ -152,8 +151,8 @@ def global_projection():
 
 
 def regional_projection(which='results_common'):
-    """per cell, T rising with CO2; which: 'results_common' (common area, Fig. 3 before v4 and the SI) or 'results'
-    (each product on its own area: the best-estimate maps of Fig. 3, mean of the products that cover each cell)"""
+    """per cell, T rising with CO2; which: 'results_common' (common area) or 'results'
+    (each product on its own area: the best-estimate maps of Fig. 4, mean of the products that cover each cell)"""
     tag = '' if which == 'results_common' else '_own'
     cache = f'{rc.ROOT}/fig_regional_crossing_projection{tag}{_WTAG}.pkl'
     proj = pickle.load(open(cache, 'rb')) if os.path.exists(cache) else {}

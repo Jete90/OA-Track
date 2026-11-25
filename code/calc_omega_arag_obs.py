@@ -15,12 +15,12 @@ Annual value: Omega_arag of the annual-mean state, i.e. mocsy applied to the
 annual means of T, S, DIC and TA, as for the CMIP6 models, whose inputs are
 annual means. A cell enters a year only if all twelve months are valid (T, S,
 DIC, TA finite and positive where required, and the monthly Omega_arag within
-(0, OMEGA_MAX)); this is the same rule as before, so the masks do not change.
+(0, OMEGA_MAX)).
 
-For comparison two further annual fields are kept:
-  omega_arag_monthly_mean   mean of the twelve monthly Omega_arag (the earlier
-                            definition; minus omega_arag it is the effect of
-                            averaging after instead of before the chemistry)
+For comparison two further annual fields are stored:
+  omega_arag_monthly_mean   mean of the twelve monthly Omega_arag (minus omega_arag
+                            it is the effect of averaging after instead of before
+                            the chemistry)
   omega_arag_monthly_mean_dw  the same, months weighted by their number of days
                             (as xarray users often average monthly output)
   omega_arag_product        mean of the product's own monthly omega_ar

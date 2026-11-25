@@ -12,7 +12,7 @@ adjusted state (calc_bias_adjusted.adjusted_fields, the same state as omega_arag
 for the scenario years k(t) is the piControl year parallel to the historical year via the branch point, as for
 the historical run (the piControl files cover 251 years from the branch). The bias and the drift are those of
 the model's historical member, and a scenario is used only with that same member (no substitute member: a model
-without the scenario of its historical member does not enter that scenario; 13 Nov 2026).
+without the scenario of its historical member does not enter that scenario).
 
 Together with the preindustrial states of calc_pi_xco2.py these files are the model members from which
 calc_product_ensemble.py builds the unconstrained and constrained product.

@@ -42,7 +42,7 @@ to every month (the seasonal cycle comes from the model).
 Output:
     data/bias/bias_clim_<model>_<member>_<reference>.nc
     data/omega_arag_biasadj[_<reference>]/<exp>/omega_arag_biasadj_Oyr_<model>_<exp>_<member>_<reference>grid.nc
-    (OceanSODA keeps the folder data/omega_arag_biasadj and the file names used so far)
+    (OceanSODA: the folder data/omega_arag_biasadj, without the suffix)
 
 Needs data/<run>/drift/drift_<model>_<member>.nc (calc_drift.py) for every model.
 
@@ -82,7 +82,7 @@ UNITS = {'thetao': 'degC', 'so': 'psu', 'dissic': 'umol kg-1', 'talk': 'umol kg-
 FILL = np.float32(1.0e20)
 OMEGA_VARS = ('omega_arag_raw', 'omega_arag_biasonly', 'omega_arag_adj')
 
-# observational references; output of each goes to its own folder, OceanSODA keeps the old names
+# observational references; output of each goes to its own folder (OceanSODA without a suffix)
 REFERENCES = {
     'OceanSODA': dict(file=co.SRC, order='time,lat,lon', t_kelvin=False,
                       vars=dict(t='temperature', s='salinity', dic='dic', ta='talk'),

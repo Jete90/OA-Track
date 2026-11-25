@@ -1,7 +1,7 @@
 """
 state_constraint.py
 ===================
-The emergent constraint applied to the model STATE (the method of the data product, decided 2 November 2026):
+The emergent constraint applied to the model STATE (the method of the data product):
 
 For a set of n models with the predictors dSST (warming of the reference window relative to 1850-1900) and CUC
 (carbon uptake capacity of the window state), and the adjusted state X~_m = (T, S, DIC, ALK) of every model for

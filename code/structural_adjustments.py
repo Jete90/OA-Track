@@ -2,8 +2,8 @@
 """
 structural_adjustments.py
 =========================
-The two adjustments of the decline 1750-2024 beyond the analysis on the common area (Extended Data Table 3,
-Extended Data Fig. 5, Extended Data Table 1), for each of the four products, written to
+The two adjustments of the decline 1750-2024 beyond the analysis on the common area (Extended Data Fig. 4,
+Extended Data Tables 1 and 2), for each of the four products, written to
 data/<run>/structural/structural_adjustments.npz.
 
 1  Alkalinity (calcification feedback). Observed: surface TA rises relative to its salinity-based prediction by
@@ -24,7 +24,7 @@ data/<run>/structural/structural_adjustments.npz.
        of the scenario for the scenario series); the products hold none (their TA has no trend)
      m(t) = [R(t) - R(t_c)] - [C(t) - C(t_c)] in model years and scenarios, R(t) - R(t_c) in product years, with
        t_c the centre of the product's window, where its TA is taken as right
-   Chemistry (since 16 Nov 2026 direct, no linear sensitivity): in every cell of the two states of each product, the
+   Chemistry: in every cell of the two states of each product, the
    constrained 1750 state (states_<ref>_pi.nc) and the 2024 state (obs_<ref>.nc), TA is raised by the adjustment of
    the cell, pattern x m(1750) and pattern x m(2024), DIC is solved by Newton's method to the same pCO2 and Omega_arag
    recomputed with mocsy (make_product_alkalinity.Chem.deltas, the function of OA-Track, the constants of the chain).
@@ -45,9 +45,9 @@ data/<run>/structural/structural_adjustments.npz.
    product and cell, then the mean of the four, on the common area and on every cell any product covers).
    The decline over the ocean of the paper (regional_common.ocean_on) minus that over the common area, from three
    estimates that rest on the same kind of 1750 state (the multi-model mean of the bias-adjusted ESMs, without the
-   emergent constraint, since 20 Nov 2026) and are all filled to the same ocean (fill_tools.fill_neighbours: 5 x 5,
+   emergent constraint) and are all filled to the same ocean (fill_tools.fill_neighbours: 5 x 5,
    the direct neighbours twice the weight of the outer ring, inward in passes; unreachable cells the mean of their
-   region, Arctic north of 60 N, Southern Ocean south of 55 S, other; test_whole_ocean_coverage.py is the test):
+   region, Arctic north of 60 N, Southern Ocean south of 55 S, other):
      products: cell by cell, every cell the mean of the products that cover it (2024: quadratic fit of the product
        years, as the chain; 1750: the unconstrained state), the cells covered by none filled
      models: each of the ESMs on its own states (polar_models.npz of test_polar_shift_models.py: area means of
@@ -64,14 +64,12 @@ data/<run>/structural/structural_adjustments.npz.
    gaps of both years of each model): the models share simple representations of what matters most there (gas
    exchange through sea ice, CO2 under the ice, constant or climatological river inputs of carbon and alkalinity).
    The levels stay those of the products with the constrained 1750 state (abs_ocean, the numbers of the paper); the
-   products' shift with the constrained state is kept as polar_products_shift_constrained (the estimate before 20 Nov
-   2026: products 0.16, models on their own cells 0.22, Jiang et al. constrained 0.21 -> 0.20 +- 0.18).
+   products' shift with the constrained state is stored as well (polar_products_shift_constrained).
 
 Usage (code/):  OA_RUN=u74 python -u structural_adjustments.py [--polar ../data/u74/structural/polar_models.npz]
-                                                            [--pattern pattern_esm2m_cmb | uniform | ...]
+                                                            [--pattern pattern_GFDL-CM4 | uniform | ...]
   Run feedback_pattern.py, barrett_sampling.py and test_polar_shift_models.py first (the pattern and the series of
-  the feedback models, the sampling of the observations, the models' whole ocean; polar_models.npz with levels_filled,
-  20 Nov 2026 or later).
+  the feedback models, the sampling of the observations, the models' whole ocean; polar_models.npz with levels_filled).
 """
 import argparse
 import datetime
@@ -89,7 +87,7 @@ import make_product_alkalinity as mpa   # Chem.deltas: TA up at constant pCO2, a
 import regional_common as rc
 from feedback_pattern import S_RANGE   # the salinity range of nTA (the pattern and the adjustment are defined for it)
 from fill_tools import fill_neighbours, regional_fill, regions, fill_to   # noqa: F401  (the filling of cells without a value,
-#   moved to fill_tools.py on 20 Nov 2026 so that the ESMs are filled with the same rule; names kept importable from here)
+#   in fill_tools.py so that the ESMs are filled with the same rule)
 
 OUT = oa_config.DATA / 'product'
 DEST = oa_config.DATA / 'structural'
@@ -292,7 +290,7 @@ def real_rise(hist, esm2m, rate_c):
     assert np.all(np.isfinite(A[:len(FEEDBACK)])), 'a CMIP6 feedback model has gaps in 1850-2021'
     # GFDL-ESM2M-COBALTv2 starts in 1860: before, its first value plus the change of the CMIP6 mean, so that every year is
     # the mean of the same four models (the mean of 3 models before 1860 and of 4 after put a step into G at 1860, visible
-    # in m(t) of Extended Data Fig. 4b; 17 Nov 2026)
+    # in m(t) of Extended Data Fig. 4b)
     k = np.isfinite(A[-1])
     f0 = int(np.argmax(k))
     assert k[f0:].all(), 'GFDL-ESM2M-COBALTv2 has gaps after its first year'
@@ -461,7 +459,7 @@ def whole_ocean(lat, lon, cmask, w, states, polar, alk, pattern, dm):
     with np.errstate(invalid='ignore'):
         P, N = np.nanmean(Ps, axis=0), np.nanmean(Ns, axis=0)
     # ocean cells no product covers in every year (outside the common area): filled from the covered cells around
-    # them (fill_neighbours); cells it cannot reach take the mean of their region (the previous fill, also printed)
+    # them (fill_neighbours); cells it cannot reach take the mean of their region (the regional mean everywhere is printed for comparison)
     cov = np.isfinite(P) & np.isfinite(N)
     (P, N), step = fill_neighbours([P, N], cov & ocean, outside)
     rest = step == -1
@@ -478,9 +476,9 @@ def whole_ocean(lat, lon, cmask, w, states, polar, alk, pattern, dm):
                fill_share=100 * w[outside & ~cov].sum() / w[ocean].sum())
     print(f'  products cell by cell (constrained 1750 state, the levels of the paper): common {d_c:.2f} %, ocean '
           f'{d_o:.2f} %, shift {d_o - d_c:+.3f} points')
-    # the shift of the decline from the products WITHOUT the constraint (since 20 Nov 2026): the 1750 state the
+    # the shift of the decline from the products WITHOUT the constraint: the 1750 state the
     # multi-model mean of the bias-adjusted ESMs in each cell, as the ESMs and Jiang et al. below, so that the three
-    # estimates of the shift rest on the same 1750 states and the same filled ocean (test_whole_ocean_coverage.py)
+    # estimates of the shift rest on the same 1750 states and the same filled ocean
     PUs = np.array([states[q][0]['omega_arag_unconstrained'] for q in PRODUCTS])
     goodu = np.isfinite(PUs) & np.isfinite(Ns)
     with np.errstate(invalid='ignore'):
@@ -544,7 +542,7 @@ def whole_ocean(lat, lon, cmask, w, states, polar, alk, pattern, dm):
         out[f'abs_{lab}'] = np.array([p50, n24, 0.8 * p50, pa, na, 0.8 * pa])
         print(f'  {lab:6s}: 1750 {p50:.3f}, 2024 {n24:.3f}, boundary {0.8 * p50:.3f}; with alkalinity: 1750 {pa:.3f}, '
               f'2024 {na:.3f}, boundary {0.8 * pa:.3f}')
-    # fraction of the ocean beyond a 20 % decline in 2024, as the notebook (Fig. 3 cell): per product first (its 2024
+    # fraction of the ocean beyond a 20 % decline in 2024, as the notebook (Fig. 4 cell): per product first (its 2024
     # fit against 0.8 x its constrained 1750 state in every cell), then the mean of the four; on the common area and
     # on the largest coverage, every cell any product covers (where a product has no value: the mean of the others)
     union = ocean & np.any(good, axis=0)
@@ -612,8 +610,7 @@ def jiang_shift(lat, lon, cmask, w):
     """the whole-ocean shift of Jiang et al.: their 2005-2014 state (obs_Jiang.nc) and the unconstrained 1750 state on
     their baseline (states_Jiang_pi.nc: the multi-model mean of the 18 bias-adjusted ESMs, not constrained, as the ESMs
     and the products above), both filled to the ocean of the paper; the decline 1750 -> 2005-2014 over the ocean minus
-    that on the common area, relative to the latter (since 20 Nov 2026; before: the constrained chain on their own
-    cells, constraint_results_jiang.pkl, printed for comparison)"""
+    that on the common area, relative to the latter"""
     ocean = rc.ocean_on(lat, lon).astype(bool)
     region = regions(lat, ocean.shape)
     with netCDF4.Dataset(OUT / 'states_Jiang_pi.nc') as f:
@@ -635,11 +632,6 @@ def jiang_shift(lat, lon, cmask, w):
     print(f'  Jiang et al. (years {yj}, unconstrained 1750 state, filled to the ocean of the paper; {100 * w[ok & ocean].sum() / w[ocean].sum():.1f} % '
           f'of it covered, {100 * share:.2f} % of the rest by the regional mean): decline 1750 -> 2005-2014 {own:.2f} % over the '
           f'ocean, {com:.2f} % on the common area: {own - com:+.3f} points, {100 * rel:+.2f} % of the decline')
-    path = oa_config.DATA / 'constraint_results_jiang.pkl'
-    if path.exists():
-        ct = pickle.load(open(path, 'rb'))['coverage_test']
-        print(f'    (the former estimate, the constrained chain on their own cells: {float(ct["own"]) - float(ct["common"]):+.3f} points, '
-              f'{100 * (float(ct["own"]) - float(ct["common"])) / float(ct["common"]):+.2f} % of the decline)')
     return dict(own=own, common=com, rel=rel, covered=100 * w[ok & ocean].sum() / w[ocean].sum())
 
 

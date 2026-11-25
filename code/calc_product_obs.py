@@ -6,7 +6,7 @@ The observation-based part of the data product: all carbonate system indicators 
 (OceanSODA-ETHZ, UExP-FNN-U, JMA-MLR, CMEMS-LSCE-FFNN; monthly T, S, DIC, TA of the product, mocsy with the
 constants of the run, GLODAPv2 Si and PO4, as for the models) for every year, computed from the annual-mean state
 (annual means of T, S, DIC and TA, all 12 months valid), as for the CMIP6 models, whose inputs are annual means;
-and the same for the decade 2010 state of Jiang et al. (2023). The level uncertainty (mapping errors) is still
+and the same for the decade 2010 state of Jiang et al. (2023). The level uncertainty (mapping errors) is
 propagated month by month. The Omega_arag computed here is checked against the product file of the chain
 (obs/omega_arag_Oyr_<product>.nc, identical chemistry) and, where the product provides it, against the
 product's own Omega_arag.

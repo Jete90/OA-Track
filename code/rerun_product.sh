@@ -10,7 +10,7 @@
 #   P2  calc_product_states.py  per reference: the constrained states (pi, historical, scenarios), the long step
 #   P3  make_product.py         the product files
 # Logs in logs/<run>. JOBS (default 4): models in parallel in P0, parts in parallel in P2; REFS to restrict;
-# SKIP_P1=1: keep the obs files of an earlier run of this script (P1 is deterministic).
+# SKIP_P1=1: keep the obs files that exist (P1 is deterministic).
 # PARALLEL_REFS=1: the references of P2 at the same time (up to JOBS processes each, about 5 GB per process).
 # Needs inputs/co2/ (CMIP6 CO2 files, see co2_history.py) and the scenario links (link_ssp_inputs.sh).
 set -e

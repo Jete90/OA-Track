@@ -7,7 +7,7 @@ itself uses (QUID 015_008, Table 2):
 
   DIC, TA, Omega_ar   CMEMS-LSCE-FFNN multi-year (1985-2024) + near-real-time (2025),
                       0.25 deg, averaged over 4x4 blocks
-  T                   OSTIA reanalysis 010_011 throughout (now reaching 2026-03), monthly 1 deg files
+  T                   OSTIA reanalysis 010_011 throughout (to 2026-03), monthly 1 deg files
                       from download_ostia_monthly.sh
   S                   CNR multi-observation SSS (015_013), multi-year 1993-2024 + NRT 2025,
                       1/8 deg averaged over 8x8 blocks; 1985-1992 monthly climatology of 1993-2024
@@ -18,7 +18,7 @@ Output: <OBS_DIR>/CMEMS-LSCE-FFNN/CMEMS-LSCE-FFNN_1deg_1985-2025.nc (oa_config.p
         dims (time, lat, lon), lat -89.5..89.5, lon -179.5..179.5, variables dic, ta (umol/kg),
         sst (degC), sss (psu), omega_ar (product), sss_is_clim (1 for climatological months)
 
-Usage (env_jens):
+Usage:
     python make_cmems_ts.py
 """
 from __future__ import annotations

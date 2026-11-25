@@ -174,7 +174,7 @@ print(f'{n} valid cell-months, grid {lat.size} x {lon.size}')
 f = {k: a[ok] for k, a in raw.items()}
 # a missing sigma in a valid cell-month (sea-ice edge, coasts, cells where the proxy field has no value) is filled with
 # the area-weighted mean sigma of the same component and month, as in level_uncertainty.py; setting it to zero would
-# treat these cells as error-free (review A7)
+# treat these cells as error-free
 _w2 = oa_config.area_weights(lat, lon)
 for k_, a_ in unc.items():
     filled = 0

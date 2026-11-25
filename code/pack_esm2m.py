@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 """
-pack_esm2m.py  (24 November 2026: the GFDL-ESM2M-COBALTv2 output of the paper for its own Zenodo record)
+pack_esm2m.py  (the GFDL-ESM2M-COBALTv2 output of the paper for its own Zenodo record)
 =============
-Copies the part of the GFDL-ESM2M-COBALTv2 simulations that the analysis reads (feedback_pattern.py and
-feedback_pattern_members.py: monthly surface alkalinity 'talk' and salinity 'salt' on the 1 degree grid) into a new
+Copies the part of the GFDL-ESM2M-COBALTv2 simulations that the analysis reads (feedback_pattern.py:
+monthly surface alkalinity 'talk' and salinity 'salt' on the 1 degree grid) into a new
 folder with the same folder structure and file names, so that the code runs unchanged with OA_ESM2M set to it:
     pi_control/OA_<decade>.01.01_to_<decade+10>.01.01_r360_180.nc                    1700-2099 (40 files)
-    <exp>/climate_change_RCP26/<member>/OA_variables/OA_<decade>...nc              1860-2099 (24 files each)
-        exp: coupled, noRAD, noBGC; member: ens2 to ens6
+    coupled/climate_change_RCP26/<member>/OA_variables/OA_<decade>...nc          1860-2099 (24 files per member)
+        member: ens2 to ens6
 Each file keeps talk and salt at the first level only (dimensions as in the source, the level dimension of length 1,
 so that f[var][:, 0] reads the same field), the coordinates, the time axis with its bounds and every attribute;
 lossless (zlib 4 with shuffle, one map per chunk). Every other field of the files is left out.
 Check per file: talk and salt equal to the source at the first level, bit for bit, and the same coordinates.
-At the end: MANIFEST.md5 and one tar per experiment (and pi_control) in <dst>_zenodo/ (Zenodo takes at most 100 files
+At the end: MANIFEST.md5 and one tar each for pi_control and coupled in <dst>_zenodo/ (Zenodo takes at most 100 files
 per record; the netCDF files are compressed already, so the tars are not).
 
 Only reads the source. Writes <file>.part and renames it when the file is complete and checked, so an interrupted run
 can simply be started again (complete files are skipped).
 
-Usage (code/ of v4, env_jens):
+Usage (code/):
   OMP_NUM_THREADS=1 python -u pack_esm2m.py --dst ../data/esm2m_zenodo/GFDL-ESM2M-COBALTv2 --jobs 3
 """
 import argparse
@@ -34,7 +34,7 @@ import numpy as np
 import feedback_pattern as fp
 
 VARS = ('talk', 'salt')                  # what feedback_pattern.esm2m_ta_s reads
-EXPS = fp.ESM2M_EXPS                     # coupled, noRAD, noBGC
+EXPS = fp.ESM2M_EXPS                     # coupled
 SCEN = fp.ESM2M_SCEN                     # climate_change_RCP26
 MEMBERS = fp.ESM2M_MEMBERS               # ens2 to ens6
 PERIOD = fp.PERIOD_ESM2M                 # 1860-2099

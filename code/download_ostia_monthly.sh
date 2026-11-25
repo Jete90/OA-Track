@@ -3,8 +3,8 @@
 # -------------------------
 # OSTIA SST as used by CMEMS-LSCE-FFNN (QUID 015_008, Table 2):
 #   SST_GLO_SST_L4_REP_OBSERVATIONS_010_011  (METOFFICE-GLO-SST-L4-REP-OBS-SST)     1985-01 .. 2026-03
-#   (CMEMS-LSCE used REP to 2022-05 and NRT after; the NRT version it used no longer exists and
-#    NRT-V2 only starts on 2024-01-17, so the reanalysis, which now reaches 2026-03, is used throughout)
+#   (CMEMS-LSCE used REP to 2022-05 and NRT after; NRT-V2 starts only on 2024-01-17, so the reanalysis, which
+#    reaches 2026-03, is used throughout)
 #   SST_GLO_SST_L4_NRT_OBSERVATIONS_010_001  (METOFFICE-GLO-SST-L4-NRT-OBS-SST-V2)  2022-06 .. end
 # Daily 0.05 deg is ~100 MB per day, so each month is downloaded, averaged to a monthly mean,
 # block-averaged 20x20 to 1 deg (cell centres -89.5..89.5, -179.5..179.5) and the daily file deleted.

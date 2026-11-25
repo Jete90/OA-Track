@@ -1,7 +1,7 @@
 """
 regional_common.py
 ==================
-Shared data and calculations for the regional figures (fig_regional.py, fig_regional_local.py).
+Shared data and calculations for the figures and tables of the notebook.
 
 For each product, on the common mask and the product's grid (from data/constraint_results.pkl,
 written by run_constraint.py with STORE_FIELDS = True):
@@ -30,7 +30,7 @@ import numpy as np
 import netCDF4
 
 # which run all figures and tables use: set os.environ['OA_RUN'] before importing (or reloading) this module.
-#   'u74' = standard (total boron Uppstroem 1974, data), 'l10' = total boron Lee et al. 2010 (data_boron_lee2010),
+#   'u74' = standard (total boron Uppstroem 1974, data), 'l10' = total boron Lee et al. 2010,
 #   'm10' = K1, K2 of Millero 2010 with Uppstroem boron (data_k1k2_m10). Data are read from and figures written to
 #   the run's folder.
 BASE = str(oa_config.BASE)
@@ -64,7 +64,7 @@ def cuc_sigma(ref, which='results_common'):
     return float(z[f'{a}_sigma_cuc_C2']), np.where(np.isfinite(f), f, fill)
 LAB = 'dT + CUC'
 
-# file names of all display items: renumber here only (main text: Fig1-3; supplement: TableS1-S2, FigS1-S10)
+# file names of the display items in the notebook (its export cell gives them the names of the manuscript)
 FIGDIR = f'{ROOT}/figures'
 FIGNAMES = {
     'best': 'Fig1_best_estimate',
@@ -80,14 +80,10 @@ FIGNAMES = {
     'dsst_bias': 'FigS4_dSST_bias',
     'correction_terms': 'FigS5_correction_terms',
     'regional_local': 'FigS6_local_constraint',
-    'bayes_compare': 'FigS7_bayes_vs_threshold',
     'crossing_co2': 'FigS8_crossing_co2',
     'regional_decline': 'FigS9_regional_decline_per_product',
     'coverage_map': 'FigS10_coverage_map',
     'steps_table': 'TableS2_steps',
-    'global': 'superseded_Fig1_global',                  # now Fig. 1 and FigS2
-    'regional_crossing': 'superseded_Fig3_regional',     # now Fig. 3
-    'backcast': 'superseded_backcast_per_product',       # now FigS2
 }
 
 
@@ -263,8 +259,8 @@ def load(results_file=f'{ROOT}/constraint_results.pkl', which='results_common', 
 
 def alkalinity_change(ref, lat, lon):
     """the change of surface Omega_arag by the alkalinity adjustment of the best estimate (make_product_alkalinity.py:
-    carbonate_system_<ref>_alkalinity.nc) on the grid of load() (lat, lon in -180..180), as Fig. 4 uses it (20 Nov
-    2026). Returns (change of the constrained 1750 state at the AR6 CO2, a function year -> change of that year's
+    carbonate_system_<ref>_alkalinity.nc) on the grid of load() (lat, lon in -180..180), as Fig. 4 uses it.
+    Returns (change of the constrained 1750 state at the AR6 CO2, a function year -> change of that year's
     annual value (from EVAL_YEAR on that of the EVAL_YEAR trend value), change of the EVAL_YEAR trend value)"""
     with netCDF4.Dataset(f'{ROOT}/product/carbonate_system_{ref}_alkalinity.nc') as f:
         flat, flon = np.asarray(f['lat'][:], 'f8'), np.asarray(f['lon'][:], 'f8')

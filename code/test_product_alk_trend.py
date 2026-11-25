@@ -12,7 +12,7 @@ of the run:
   own record: the trend of ALK, of the salinity-normalised ALK (ALK x 35 / S), and of the residual of ALK after a
   regression on S and T over that period (the part neither salinity nor temperature explain), in umol/kg per year,
   and the share of the expected missing rise (0.072 umol/kg per year) that this residual trend would cover.
-The same per cell is not needed for the question. Only for us, no figures.
+No figures.
 Usage (code/):  OA_RUN=u74 python -u test_product_alk_trend.py
 """
 import pickle
@@ -24,7 +24,7 @@ import oa_config
 import calc_omega_arag_obs as co
 
 REFS = ('OceanSODA', 'UExP', 'JMA', 'CMEMS')
-RATE = 0.0718          # umol/kg per year, the common-area rate 0.063 / p of structural_adjustments (v2)
+RATE = 0.0718          # umol/kg per year, the common-area rate 0.063 / p of structural_adjustments
 COMMON = (1990, 2024)
 
 pk = pickle.load(open(oa_config.DATA / 'constraint_results.pkl', 'rb'))

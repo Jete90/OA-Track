@@ -46,7 +46,7 @@ COBE3 = str(oa_config.OBS2_DIR / 'SST_comparison/COBEv3/cobe-sst3.monthly.{}.nc'
 DCENTI = str(oa_config.OBS2_DIR / 'DCENT-I/DCENT_I_1.0.0.0_{}.nc')
 VARS = ('thetao', 'so', 'dissic', 'talk')
 CUC_SIG = 0.0                       # observed CUC: no set value; its uncertainty is the product's mapping error,
-                                    # counted with the mapping term (cuc_mapping_uncertainty.py; notebook Fig. 4 cell)
+                                    # counted with the mapping term (cuc_mapping_uncertainty.py; notebook, preparation cell)
 ALK_SIG_FRAC = 0.5
 # preindustrial CO2 is a definition, not an uncertainty: the reference is 1750 (278.3 ppm) and
 # the 275-284 ppm range is reported separately as a range, not folded into sigma
@@ -295,8 +295,7 @@ def run_constraint(common=None, quiet=False):
         # preindustrial Omega_arag of every model at every state: global mean of the per-cell fields on the mask
         y = {k: np.array([gm2(PI_FIELDS[k][m]) for m in names]) for k in tags}
         y1750 = y['1750']
-        # for comparison with the earlier method (annual-mean state at 284 ppm times a global factor): the
-        # adjusted piControl itself (pi284) and the mean ratio 1750/pi284
+        # the adjusted piControl itself (pi284) and the mean ratio 1750/pi284 (printed)
         f1750 = y1750 / y['pi284']
 
         om_obs, R_obs, _ = omega_gm(obs)
@@ -340,7 +339,7 @@ def run_constraint(common=None, quiet=False):
                 sk[k] = dict(xco2=xco2[k], y_raw=float(y[k].mean()), spread=float(y[k].std(ddof=1)),
                              constrained=float(yck), constrained_sigma=float(np.hypot(sfk, sok)),
                              fit_sigma=float(sfk), obs_sigma=float(sok), r2=float(r2k),
-                             ratio=float(np.mean(y[k] / y1750)))       # ratio: only for the old notebook cells
+                             ratio=float(np.mean(y[k] / y1750)))       # ratio to the 1750 state (the notebook scales with it)
             rng = (sk['pi_high']['constrained'], sk['pi_low']['constrained'])   # 284 and 275 ppm, constrained
             print(f'  {lab:16s} R2 {r2:.2f}  coefs ' + ' '.join(f'{b:+.4f}' for b in beta)
                   + f'\n  {"":16s} 1750 {yc:.3f} +- {stot:.3f} (fit {sfit:.3f}, obs {sobs:.3f}), '

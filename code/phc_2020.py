@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-phc_2020.py  (18 November 2026)
+phc_2020.py
 ===========
 The decline of the Planetary Health Check (2026) for other years than 2024, in its own framework: global mean of
 saturation_aragonite of UExP-FNN-U (mean of the 12 months, cells with all 12), weighted with the weights of the file

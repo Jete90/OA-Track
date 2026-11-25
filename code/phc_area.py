@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-phc_area.py  (18 November 2026)
+phc_area.py
 ===========
 Why does averaging 1750 and 2024 over different areas make the decline of the Planetary Health Check (2026) larger?
 In its framework (UExP-FNN-U v2026-1, 2024 = mean of the 12 months, cells with all 12; 1750 = the field of Jiang et

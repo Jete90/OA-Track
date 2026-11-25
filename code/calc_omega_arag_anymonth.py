@@ -7,14 +7,14 @@ a cell enters a year as soon as it has one valid month (valid: T, S, DIC, TA pre
 monthly Omega_arag within (0, 20)); the annual value is Omega_arag of the mean state over the
 valid months (means of T, S, DIC and TA over those months), the annual-state definition of
 calc_omega_arag_obs.py / calc_omega_arag_products.py. Same chemistry as those scripts.
-Only used for the "all cells, no consistent mask" time series in Figure 1e. Note that cells
+Only used for the "all cells, no consistent mask" time series in Supplementary Fig. 1e. Note that cells
 with data only in some months are seasonally biased (e.g. summer-only polar cells).
 
 Years with fewer than half of the maximum number of valid cells are dropped, as in the main files.
 
 Output: data/obs/omega_arag_anymonth_Oyr_<product>.nc  (year, lat, lon, omega_arag, n_months)
 
-Usage (env_jens, like the other Omega scripts):
+Usage:
     python calc_omega_arag_anymonth.py
     python calc_omega_arag_anymonth.py --products UExP-FNN-U-v2026-1
 """

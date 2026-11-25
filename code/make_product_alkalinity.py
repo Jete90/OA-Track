@@ -314,7 +314,7 @@ def build(ref, P):
         tc, M = P.tc[ref], P.M[ref]
         # m_best switches from the model formula to the product formula in the first year of the bias window; the file
         # switches from the constrained ESMs to the product in the product's first year: both must be the same year, so
-        # that each formula goes with its own base field (17 Nov 2026)
+        # that each formula goes with its own base field
         assert prod.any() and int(years[prod][0]) == P.first[ref], \
             f'{ref}: product from {years[prod][0] if prod.any() else "-"}, m(t) switches in {P.first[ref]}'
         m = P.on(P.m_best[ref], years)
