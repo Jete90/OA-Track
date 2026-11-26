@@ -24,8 +24,6 @@ Outputs (rc.FIGDIR, and with the manuscript names in rc.FIGDIR/manuscript):
 Needs: OA-Track_<ref>.nc and OA-Track_<ref>_noalk.nc of the four fCO2-products (make_oatrack.py), openpyxl.
 Usage (code/):  OA_RUN=u74 OMP_NUM_THREADS=2 python -u make_indicator_table.py
 """
-import datetime
-
 import netCDF4
 import numpy as np
 
@@ -147,6 +145,11 @@ def table_png(rows, V, S, co2):
     return fig
 
 
+READ_ME = ('Supplementary Data 1 of: Terhaar, J., Xue, T. & Hollitzer, H. Precise tracking of ocean acidification as '
+           'it nears its planetary boundary.',
+           'As Supplementary Table 2, but for every year from 1750 to 2024.')
+
+
 def excel(rows, V, S, co2, src, path):
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill
@@ -173,10 +176,10 @@ def excel(rows, V, S, co2, src, path):
         for c in col:
             c.number_format = '0.0000'
     ws.freeze_panes = 'D2'
-    info = wb.create_sheet('read me')
-    for line in (__doc__.strip().split('\n') + ['', f'created {datetime.datetime.now():%Y-%m-%d %H:%M}, run {oa_config.RUN}, '
-                                                    f'area weights: {oa_config.WEIGHTS_TEXT}']):
+    info = wb.create_sheet('read me')                  # for the readers
+    for line in READ_ME:
         info.append([line])
+    info.column_dimensions['A'].width = 125
     wb.save(path)
 
 
