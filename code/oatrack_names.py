@@ -19,8 +19,10 @@ Every name is   <q>_<block>[_gm][_change][_<term>]
     _gm         a global mean, with the dimension area; otherwise a map
     _change     the change from the preindustrial state of the dimension state, relative (%; absolute for pH,
                 temperature and salinity)
-    terms       sigma (every term included), sigma_upper_limit (changes of the ESM years), alkalinity_adjustment, and in
-                the maps sigma_alkalinity (its part of the 1 sigma, with the spread of the patterns)
+    terms       sigma (every term included: sigma_delta, sigma_spread, sigma_mapping, sigma_constants, sigma_fit,
+                sigma_alkalinity, sigma_whole_ocean, as they apply), sigma_upper_limit (changes of the ESM years),
+                alkalinity_adjustment, and in the maps sigma_alkalinity (its part of the 1 sigma, with the spread of
+                the patterns)
     dimensions  area (common_area, product_area, whole_ocean), product (mean, OceanSODA, UExP, JMA, CMEMS), scenario
                 (historical, ssp126, ssp245, ssp370, ssp585), state (1750, 1850), year
 """
@@ -66,40 +68,50 @@ AREA_TEXT = ('area common_area: cells covered by all four fCO2-products in every
              'mean); whole_ocean: the whole ocean as in the paper (empty for the annual values)')
 
 
-DELTA = ('delta (the change from the reference period of the fCO2-products, today, to the state or year, from the '
-         'bias-adjusted and constrained ESMs, including the uncertainty of the atmospheric CO2)')
+TERMS = {                                        # the terms of the 1 sigma, named as in the README and the paper
+    'delta': 'sigma_delta (the uncertainty of delta, the change that the bias-adjusted and constrained ESMs give from '
+             'the reference period of the fCO2-products, today, to the state or year, including the uncertainty of the '
+             'atmospheric CO2)',
+    'spread': 'sigma_spread (the spread between the fCO2-products, mean only)',
+    'mapping': 'sigma_mapping (the mapping error of the fCO2-products)',
+    'constants': 'sigma_constants (the equilibrium constants)',
+    'fit': 'sigma_fit (the estimate of the forced state from the annual values)',
+    'alkalinity': 'sigma_alkalinity (the alkalinity adjustment)',
+    'whole_ocean': 'sigma_whole_ocean (the extension to the whole ocean, whole_ocean only)',
+}
 
 
 def sigma_words(q, block, change=False, gm=False):
-    """what _sigma of a value or change contains"""
+    """the terms of _sigma of a value or change"""
     obs = block.startswith('obs')
     if change:
-        w = ['delta of the preindustrial state' if obs else 'delta of both years',
-             'spread of the change between the fCO2-products (mean only)']
+        w = ['sigma_delta of the preindustrial state' if obs else 'sigma_delta of both years',
+             'sigma_spread of the change (mean only)']
     else:
-        w = ([] if obs else [DELTA]) + ['spread between the fCO2-products (mean only)',
-              'mapping error'] + ([] if q in NO_CONSTANTS else ['equilibrium constants'])
+        w = ([] if obs else [TERMS['delta']]) + [TERMS['spread'], TERMS['mapping']] + (
+            [] if q in NO_CONSTANTS else [TERMS['constants']])
     if block == 'obs_annual_forced':
-        w.append('fit of the forced state')
+        w.append(TERMS['fit'])
     if q in ALK:
-        w.append('alkalinity adjustment')
+        w.append(TERMS['alkalinity'])
     if gm and q in WHOLE_OCEAN:
-        w.append('extension to the whole ocean (whole_ocean only)')
+        w.append(TERMS['whole_ocean'])
     return w
 
 
 TEXT = {
     '_sigma': 'every term included ({terms}); use it alone',
-    '_sigma_change': 'every term included ({terms}; mapping error and constants cancel); use it alone',
-    '_sigma_upper_limit': 'upper limit ({terms}); delta is correlated between the two years, so the true 1 sigma is '
+    '_sigma_change': 'every term included ({terms}; sigma_mapping and sigma_constants cancel); use it alone',
+    '_sigma_upper_limit': 'upper limit ({terms}); the errors of delta in the two years are correlated, so the true 1 sigma is '
                           'smaller (exact value in version 1.1)',
-    '_alkalinity_adjustment_gm': 'included in the value and, as |a|, in {sig} (the rise has been measured only since '
-                                 '1991); without the adjustment: value minus a, with 1 sigma sqrt({sig}^2 - a^2)',
+    '_alkalinity_adjustment_gm': 'included in the value and, as sigma_alkalinity = |a|, in {sig} (the rise has been '
+                                 'measured only since 1991); without the adjustment: value minus a, with 1 sigma '
+                                 'sqrt({sig}^2 - a^2)',
     '_alkalinity_adjustment_map': 'included in the value; without the adjustment: value minus this, with 1 sigma '
                                   'sqrt({sig}^2 - {salk}^2)',
-    '_sigma_alkalinity': 'the part of {sig} from the alkalinity adjustment, sqrt(a^2 + s^2): a the adjustment, s the '
-                         'spread between the patterns of the four ESMs with saturation-dependent calcification (already '
-                         'included in {sig}; only to remove the adjustment)',
+    '_sigma_alkalinity': 'sigma_alkalinity, the part of {sig} from the alkalinity adjustment, sqrt(a^2 + s^2): a the '
+                         'adjustment, s the spread between the patterns of the four ESMs with saturation-dependent '
+                         'calcification (already included in {sig}; only to remove the adjustment)',
 }
 
 
@@ -198,7 +210,8 @@ def _masks(F, q, product_area, constrained):
           '(2% of the ocean); the single fCO2-products are not filled')
     if constrained:
         F.add('constrained_flag', ['lat', 'lon'], '', 'how the cell is constrained', '1 cell-by-cell emergent '
-              'constraint; 2 multi-model mean (no local observation-based predictors)')
+              'constraint in every fCO2-product covering the cell; 2 multi-model mean (no local observation-based '
+              'predictors) in at least one of them; 0 where no fCO2-product covers the cell (filled cells and land)')
     if q in T_DEPENDENT:
         levels = ('the preindustrial states and the ESM years' if constrained else
                   'the preindustrial states, the annual values and the forced states' if q == 'thetao' else

@@ -42,11 +42,7 @@ import math
 import os
 from pathlib import Path
 
-VERSION = ('v4 (November 2026): v3 (drift-corrected adjusted annual states, preindustrial states cell by cell, annual-mean-state '
-           'Omega_arag; temperatures floored at the freezing point before the chemistry and unsolved carbonate systems NaN; '
-           'alkalinity adjustment from the time series of the four ESMs with saturation-dependent calcification; complete '
-           'GFDL-ESM4 (gr) and MRI-ESM2-0 salinity files) with area weights cell area x ocean fraction (OA_WEIGHTS); '
-           'UExP-FNN-U adjusted over its own years 1980-2014 (12 November 2026)')
+VERSION = 'OA-Track code v1.0'
 
 BASE = Path(os.environ.get('OA_BASE', Path(__file__).resolve().parents[1]))
 

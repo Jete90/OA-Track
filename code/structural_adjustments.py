@@ -193,7 +193,7 @@ def model_series():
     assert f.exists(), f'{f} missing: run feedback_pattern.py first'
     z = np.load(f)
     assert 'years_historical' in z.files and 'control_esm2m' in z.files, \
-        f'{f}: no series or control levels (feedback_pattern.py before 7 November 2026): run it again'
+        f'{f}: no series or control levels: run feedback_pattern.py again'
     yh = np.asarray(z['years_historical']).astype(int)
     hist, scen, full = {}, {}, {}
     for m in FEEDBACK:
@@ -297,7 +297,7 @@ def real_rise(hist, esm2m, rate_c):
     g3 = A[:len(FEEDBACK)].mean(axis=0)
     if f0 > 0:
         print(f'  GFDL-ESM2M-COBALTv2 from {years[f0]}: before, its {years[f0]} value plus the change of the CMIP6 mean '
-              f'(step of the former 3-to-4-model mean at {years[f0]}: {(A[-1, f0] - g3[f0]) / A.shape[0]:+.3f} umol/kg)', flush=True)
+              f'(step of a 3-to-4-model mean at {years[f0]}: {(A[-1, f0] - g3[f0]) / A.shape[0]:+.3f} umol/kg)', flush=True)
     A[-1, :f0] = A[-1, f0] + g3[:f0] - g3[f0]
     G = A.mean(axis=0)                              # the four models in every year; anomalies to the controls
     it = (years >= OBS_PERIOD[0]) & (years <= OBS_PERIOD[1])
@@ -574,10 +574,10 @@ def whole_ocean(lat, lon, cmask, w, states, polar, alk, pattern, dm):
     expected = {m for m, _ in cpx.find_runs(None)}
     if set(names) != expected:
         print(f'  WARNING models in {Path(polar).name}: missing {sorted(expected - set(names))}, extra {sorted(set(names) - expected)}')
-    assert 'levels_filled' in z.files, f'{polar}: no filled levels (test_polar_shift_models.py before 20 Nov 2026): run it again'
+    assert 'levels_filled' in z.files, f'{polar}: no filled levels: run test_polar_shift_models.py again'
     L, yrs = np.asarray(z['levels_filled'], 'f8'), [int(y) for y in z['years']]   # each model filled to the ocean of the paper
     Lo = np.asarray(z['levels'], 'f8')                                           # each model on its own cells (comparison)
-    assert 1750 in yrs, f'{polar}: no 1750 level (test_polar_shift_models.py before 16 Nov 2026): run it again'
+    assert 1750 in yrs, f'{polar}: no 1750 level: run test_polar_shift_models.py again'
     i0, i2 = yrs.index(1750), yrs.index(YEAR)
     c50, o50, c24, o24 = L[:, 0, i0], L[:, 1, i0], L[:, 0, i2], L[:, 1, i2]
     rel_own = (100 * (1 - Lo[:, 1, i2] / Lo[:, 1, i0]) - 100 * (1 - Lo[:, 0, i2] / Lo[:, 0, i0])) / (100 * (1 - Lo[:, 0, i2] / Lo[:, 0, i0]))
@@ -596,7 +596,7 @@ def whole_ocean(lat, lon, cmask, w, states, polar, alk, pattern, dm):
     print(f'  models ({len(names)}; {z["source"]}), each filled to the ocean of the paper:')
     print(f'    shift 1750 -> {YEAR} {100 * rel.mean():+.2f} % of the decline (sd {100 * sd(rel):.2f} %), on the decline of '
           f'the paper {rel.mean() * dm:+.3f} (sd {sd(rel) * dm:.3f}) points; products {du_o - du_c:+.3f}; on the models\' own '
-          f'cells (the former estimate) {rel_own.mean() * dm:+.3f} (sd {sd(rel_own) * dm:.3f})')
+          f'cells (for comparison) {rel_own.mean() * dm:+.3f} (sd {sd(rel_own) * dm:.3f})')
     print(f'    level gap ocean / common - 1: 1750 {100 * g50.mean():+.2f} % (sd {100 * sd(g50):.2f} %), {YEAR} '
           f'{100 * g24.mean():+.2f} % (sd {100 * sd(g24):.2f} %), correlation {np.corrcoef(g50, g24)[0, 1]:+.2f}; products '
           f'1750 {100 * (po50 / pc50 - 1):+.2f} %, {YEAR} {100 * (po24 / pc24 - 1):+.2f} %')
@@ -682,7 +682,7 @@ def main():
              polar_shift=shift_polar, polar_sigma=sigma_polar, polar_products_shift=wo['products_shift'],
              polar_products_shift_constrained=wo['products_shift_constrained'], polar_models_rel_own_cells=wo['models_rel_own_cells'],
              polar_jiang_covered=jr['covered'],
-             polar_method='since 20 Nov 2026: products and Jiang et al. with the unconstrained 1750 state (multi-model mean), '
+             polar_method='products and Jiang et al. with the unconstrained 1750 state (multi-model mean), '
                           'each ESM on its own states, all three filled to the ocean of the paper (fill_tools); the mean of '
                           'the three, 1 sigma = POLAR_SIGMA_FACTOR x the spread of the ESMs',
              polar_jiang_shift=shift_jiang, polar_jiang_rel=jr['rel'], polar_jiang_points_2010=jr['own'] - jr['common'],
@@ -690,7 +690,7 @@ def main():
              polar_models_rel_sd=wo['models_rel_sd'], polar_models_n=wo['models_n'], polar_sigma_factor=POLAR_SIGMA_FACTOR,
              decline_outside=np.array([wo[f'decline_outside_{g}'] for g in ('Arctic', 'Southern', 'other')]),
              alk_dO50=np.array([alk[q]['dO50'] for q in PRODUCTS]), alk_dO24=np.array([alk[q]['dO24'] for q in PRODUCTS]),
-             alk_chemistry='direct: Chem.deltas (TA + pattern x m at constant pCO2, Omega_arag recomputed), since 16 Nov 2026',
+             alk_chemistry='direct: Chem.deltas (TA + pattern x m at constant pCO2, Omega_arag recomputed)',
              abs_common=wo['abs_common'], abs_ocean=wo['abs_ocean'],
              abs_columns=np.array(['1750', '2024', 'boundary', '1750 alk', '2024 alk', 'boundary alk']),
              frac20_columns=np.array(['without', 'with alkalinity', 'area % of ocean']),

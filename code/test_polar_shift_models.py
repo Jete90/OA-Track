@@ -193,7 +193,7 @@ def main():
           f'{sd(s["do14"] - s["dc14"]):.2f} points; relative {100 * rel14.mean():+.2f} % (sd {100 * sd(rel14):.2f} %)')
     print(f'  {BASE} -> 1950 (check, historical only): relative {100 * rel195.mean():+.2f} % (sd {100 * sd(rel195):.2f} %)')
     print(f'  {BASE} -> 2000 (check, historical only): relative {100 * rel00.mean():+.2f} % (sd {100 * sd(rel00):.2f} %)')
-    print(f'  1850 -> {YEAR} (check, the former central value): relative {100 * rel50.mean():+.2f} % (sd {100 * sd(rel50):.2f} %)')
+    print(f'  1850 -> {YEAR} (check): relative {100 * rel50.mean():+.2f} % (sd {100 * sd(rel50):.2f} %)')
     i0, i2 = LEVEL_YEARS.index(BASE), LEVEL_YEARS.index(YEAR)
     for lab, g, j in ((str(BASE), s['g50'], i0), (str(YEAR), s['g24'], i2)):
         gap = L[:, 1, j] - L[:, 0, j]
@@ -221,7 +221,7 @@ def main():
              levels_filled=LF, covered_by_model=np.array(coverages),
              levels_filled_source='every model on the products\' grid (nearest cell), filled to the ocean of the paper where it has no '
                                   'value (fill_tools.fill_to: 5 x 5 neighbours in passes, then the regional mean), area means with the '
-                                  'weights of the products\' grid (20 Nov 2026)',
+                                  'weights of the products\' grid',
              years=np.array(LEVEL_YEARS), masks=np.array(MASKS), year=YEAR, base=BASE, x1750=X1750, window=np.array(WINDOW),
              source=f'smoothed states of calc_smooth_states.py ({css.OUT}), cutoff {", ".join(f"{c:g}" for c in sorted(cutoffs))} years, drift level of '
                     f'{WINDOW[0]}-{WINDOW[1]}; Omega_arag of the annual-mean state (mocsy); 1750: the 1850 state at {X1750} ppm',

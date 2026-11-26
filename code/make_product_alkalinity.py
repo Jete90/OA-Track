@@ -93,7 +93,7 @@ class Params:
         need = ('alk_years', 'alk_m_best', 'alk_m_model', 'alk_m_product', 'alk_R_best', 'alk_C_best', 'alk_window_centre',
                 'alk_first_product_year', 'alk_rate_common', 'alk_scale')
         miss = [k for k in need if k not in z.files]
-        assert not miss, f'{path}: no {miss}: rerun structural_adjustments.py (7 November 2026 or later)'
+        assert not miss, f'{path}: no {miss}: rerun structural_adjustments.py'
         src = str(z['pattern_source']) if 'pattern_source' in z.files else '?'
         assert src == f'feedback_pattern.npz ({key})', f'{path} is not the run of {key} ({src}): rerun structural_adjustments.py'
         self.series_source = str(z['alk_series_source']) if 'alk_series_source' in z.files else '?'

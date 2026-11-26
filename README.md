@@ -13,6 +13,10 @@ observation-based fCO2-products and 18 CMIP6 Earth system models, with one consi
 (https://doi.org/10.17882/121840), the output of GFDL-ESM2M-COBALTv2 used here at Zenodo
 (https://doi.org/10.5281/zenodo.24493378).
 
+Under the direction of Jens Terhaar, the code was written by Claude (Anthropic), a large language model. The
+authors designed the analysis, checked every step, tested the code against independent calculations, and take
+full responsibility for it.
+
 ## Layout and running
 
 The scripts sit in one folder, `code/`, inside a production folder that also holds `inputs/`, `data/<run>/` and
@@ -31,10 +35,10 @@ constants). Area weights: `OA_WEIGHTS=ocean` (the paper: cell area times ocean f
    writes the complete output for each fCO2-product, and `python make_indicator_table.py` Supplementary Table 2
    and Supplementary Data 1. OA-Track as archived at SEANOE: `python make_oatrack_product.py --part global` (the
    global means, .nc and .csv), `--part obs_based_products` (the maps of the obs-based products) and
-   `--part esms` (the maps of the ESMs, which are added to this code and to the record before the paper is
-   published), with the names and descriptions of `oatrack_names.py`;
-   `python list_oatrack_names.py` lists every variable, and `python pack_oatrack.py` packs the record (zip of the
-   global means, maps, MANIFEST.md5).
+   `--part esms` (the maps of the ESMs), with the names and descriptions of `oatrack_names.py`;
+   `python list_oatrack_names.py` lists every variable, `python check_esm_maps.py` and
+   `python check_map_means.py` check the maps against the global means and the chain, and
+   `python pack_oatrack.py` packs the record (zip of the global means, maps, MANIFEST.md5).
 4. The figures and tables: `OA_boundary_figures.ipynb` from top to bottom (open it from `code/`); its last cell
    copies every display item under the name the manuscript uses. Box 1: `fig_box_schematic.py`.
 5. The other checks behind statements of the paper (last table below) run on their own, each with
@@ -193,6 +197,8 @@ The last cell of the notebook copies every display item into `data/<run>/figures
 
 | File | What it does |
 |---|---|
+| `check_esm_maps.py` | Checks the maps of the ESMs (OA-Track_<q>_maps_esms.nc) of make_oatrack_product.py --part esms before they are packed, independently of that script, against the definitio ... |
+| `check_map_means.py` | Compares the means of the maps of OA-Track over the common area (weights cell_weight) with its global means, for every quantity and the README of OA-Track: |
 | `list_oatrack_names.py` | Writes the full list of the files and variables of OA-Track from oatrack_names.py: OA-Track_variables.pdf every file and every variable with dimensions and units; long na ... |
 | `pack_esm2m.py` | the GFDL-ESM2M-COBALTv2 output of the paper for its own Zenodo record Copies the part of the GFDL-ESM2M-COBALTv2 simulations that the analysis reads (feedback_pattern.py: |
 | `pack_oatrack.py` | Packs OA-Track for its SEANOE record (https://doi.org/10.17882/121840) from the output of make_oatrack_product.py: OA-Track_README.pdf the README |
