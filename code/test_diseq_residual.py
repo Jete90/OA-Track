@@ -24,6 +24,7 @@ disequilibrium, which the fCO2-products observe, stand in for the change, i.e. i
 and the observed D_hist of OceanSODA-ETHZ (its 1983-2014 mean state, data/mechanism/state_OceanSODA.nc) on the
 same area.
 Reads only, writes nothing.
+The window state has the drift of the parallel piControl years removed (as the chain).
 Usage (code/):  OA_RUN=u74 python -u test_diseq_residual.py
 """
 import glob
@@ -36,6 +37,7 @@ import calc_omega_arag_obs as co
 import co2_history
 import mocsy
 import oa_config
+from test_state_constraint import window_drift
 
 REF, WIN = 'OceanSODA', (1983, 2014)
 
@@ -101,6 +103,11 @@ for i, m in enumerate(names):
         mlat, mlon = np.asarray(g['lat'][:], float), np.asarray(g['lon'][:], float)
         get = lambda k: np.ma.filled(g[k][:].astype('f8'), np.nan)
         F = {tag: {v: get(f'{v}_{tag}') for v in ('thetao', 'so', 'dissic', 'talk')} for tag in ('hist', 'pi')}
+    # the window state with the drift of the parallel piControl years removed, as in the chain and Extended Data
+    # Fig. 3 (test_state_constraint.read_changes)
+    member = hits[0].split('/')[-1][:-3].split(f'state_{m}_')[1]
+    drift = window_drift(oa_config.DATA, m, member, WIN, mlat, mlon)
+    F['hist'] = {v: F['hist'][v] - drift[v] for v in F['hist']}
     key = (mlat.size, mlon.size, float(mlon[0]))
     if key not in nut:
         nut[key] = co.load_nutrients(mlat, mlon)

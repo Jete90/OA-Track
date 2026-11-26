@@ -38,7 +38,9 @@ constants). Area weights: `OA_WEIGHTS=ocean` (the paper: cell area times ocean f
    `--part esms` (the maps of the ESMs), with the names and descriptions of `oatrack_names.py`;
    `python list_oatrack_names.py` lists every variable, `python check_esm_maps.py` and
    `python check_map_means.py` check the maps against the global means and the chain, and
-   `python pack_oatrack.py` packs the record (zip of the global means, maps, MANIFEST.md5).
+   `python pack_oatrack.py` packs the record (zip of the global means, maps, MANIFEST.md5). The rows of total
+   boron and K1, K2 in Extended Data Tables 1 and 2 need the main analysis of the runs `l10` and `m10` as well
+   (`./rerun.sh l10`, `./rerun.sh m10`); without them the notebook stops for the run `u74`.
 4. The figures and tables: `OA_boundary_figures.ipynb` from top to bottom (open it from `code/`); its last cell
    copies every display item under the name the manuscript uses. Box 1: `fig_box_schematic.py`.
 5. The other checks behind statements of the paper (last table below) run on their own, each with
@@ -50,46 +52,48 @@ matplotlib, pandas, openpyxl, gsw and mocsy 2.4.0; rasterio and GDAL for `ocean_
 
 ## Display items and the notebook cells that draw them
 
-| Display item | Notebook cell |
+Each display item is drawn by the code cell below the notebook heading given here.
+
+| Display item | Notebook heading |
 |---|---|
-| Fig. 1 | 8 |
-| Fig. 2 | 15 |
-| Fig. 3 | 25 |
-| Fig. 4 | 17 |
-| Extended Data Fig. 1 | 57 |
-| Extended Data Fig. 2 | 69 |
-| Extended Data Fig. 3 | 59 |
-| Extended Data Fig. 4 | 35 |
-| Extended Data Fig. 5 | 63 |
-| Extended Data Fig. 6 | 51 |
-| Extended Data Fig. 7 | 67 |
-| Extended Data Table 1 | 27 |
-| Extended Data Table 2 | 31 |
-| Extended Data Table 3 | 65 |
-| Supplementary Fig. 1 | 37 |
-| Supplementary Fig. 2 | 55 |
-| Supplementary Fig. 3 | 39 |
-| Supplementary Fig. 4 | 13 |
-| Supplementary Fig. 5 | 41 |
-| Supplementary Fig. 6 | 43 |
-| Supplementary Fig. 7 | 45 |
-| Supplementary Fig. 8 | 47 |
-| Supplementary Fig. 9 | 53 |
-| Supplementary Fig. 10 | 71 |
-| Supplementary Fig. 11 | 71 |
-| Supplementary Fig. 12 | 71 |
-| Supplementary Fig. 13 | 71 |
-| Supplementary Fig. 14 | 71 |
-| Supplementary Fig. 15 | 71 |
-| Supplementary Fig. 16 | 71 |
-| Supplementary Fig. 17 | 71 |
-| Supplementary Fig. 18 | 71 |
-| Supplementary Fig. 19 | 71 |
-| Supplementary Fig. 20 | 71 |
-| Supplementary Fig. 21 | 71 |
-| Supplementary Fig. 22 | 77 |
-| Supplementary Fig. 23 | 79 |
-| Supplementary Table 1 | 73 |
+| Fig. 1 | Fig. 1: global mean surface Ωarag from 1750 to 2024 |
+| Fig. 2 | Fig. 2: emergent constraint |
+| Fig. 3 | Fig. 3: why estimates differ |
+| Fig. 4 | Fig. 4: when and where the boundary is crossed |
+| Extended Data Fig. 1 | Extended Data Fig. 1: estimators of the 2024 state (needs the preparation cell) |
+| Extended Data Fig. 2 | Extended Data Fig. 2: the observations of Jiang et al. (2023) through the chain of this study (needs the preparation cell and run_constraint_jiang.py) |
+| Extended Data Fig. 3 | Extended Data Fig. 3: why the emergent constraint works (needs test_state_constraint.py) |
+| Extended Data Fig. 4 | Extended Data Fig. 4: the two adjustments to the global mean (needs the structural files and the alkalinity files of the data product) |
+| Extended Data Fig. 5 | Extended Data Fig. 5: from Findlay et al. (2025) to this study |
+| Extended Data Fig. 6 | Extended Data Fig. 6: crossing of the boundary against CO2 |
+| Extended Data Fig. 7 | Extended Data Fig. 7: 1750 and 2024 states (needs the Fig. 2 cell) |
+| Extended Data Table 1 | Extended Data Table 1: global summary (needs the preparation cell) |
+| Extended Data Table 2 | Extended Data Table 2: uncertainty budget (needs the preparation cell) |
+| Extended Data Table 3 | Extended Data Table 3: steps from the Planetary Health Check 2026 and Findlay et al. (2025) to this study (needs the cells of block a and of Extended Data Fig. 5) |
+| Supplementary Fig. 1 | Supplementary Fig. 1: the fCO2-products in 2024 |
+| Supplementary Fig. 2 | Supplementary Fig. 2: coverage of the fCO2-products |
+| Supplementary Fig. 3 | Supplementary Fig. 3: global mean per fCO2-product |
+| Supplementary Fig. 4 | Supplementary Fig. 4: trends of the fCO2-products and the ESMs (after the trend check) |
+| Supplementary Fig. 5 | Supplementary Fig. 5: emergent constraint per fCO2-product |
+| Supplementary Fig. 6 | Supplementary Fig. 6: ΔSST bias of the ESMs |
+| Supplementary Fig. 7 | Supplementary Fig. 7: terms of the cell-by-cell constraint |
+| Supplementary Fig. 8 | Supplementary Fig. 8: effect of the cell-by-cell constraint |
+| Supplementary Fig. 9 | Supplementary Fig. 9: regional decline per fCO2-product |
+| Supplementary Fig. 10 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 11 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 12 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 13 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 14 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 15 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 16 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 17 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 18 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 19 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 20 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 21 | Supplementary Figs. 10 to 21: every indicator of the data product |
+| Supplementary Fig. 22 | Supplementary Fig. 22: leave-one-out test of the emergent constraint |
+| Supplementary Fig. 23 | Supplementary Fig. 23: the feedback pattern of each ESM |
+| Supplementary Table 1 | Supplementary Table 1: the carbonate system of the common area in 1750 and 2024 (data product) |
 | Box 1 | `fig_box_schematic.py` |
 | Supplementary Table 2, Supplementary Data 1 | `make_indicator_table.py` |
 

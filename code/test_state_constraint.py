@@ -21,15 +21,17 @@ compared with the sigma of the direct regression.
 
 The states are the time-mean window states minus the time-mean model changes (mechanism and drift files), DIC
 lowered so that pCO2 drops by (284.317 - 278.3) ppm (1 - pH2O), Omega_arag with mocsy and the constants of the
-run (as test_constraint_loo.py --mechanism; these reproduce the paper's per-model values to 4e-4).
+run (as test_constraint_loo.py --mechanism). Area means with the weights of the chain (oa_config.area_weights).
+--area common (Extended Data Fig. 3): the common area of the global constraint of the paper (Fig. 2,
+constraint_results 'results_common'); --area own (default): each product's own area ('results').
 
 Saves, per product, the global means behind the figure of the mechanism (fig cell 'state_constraint'):
-    <data>/state_constraint/state_<ref>.npz   per model: dSST, CUC (predictors), global mean changes dT, dS, dDIC, dALK
+    <data>/state_constraint/state_<ref>.npz (own area) or state_<ref>_common.npz (common area)   per model: dSST, CUC (predictors), global mean changes dT, dS, dDIC, dALK
     (1750 to the window, drift corrected, on the valid cells), Omega_arag 1750; the observed predictors; direct and
     state-C Omega_1750 with their sigma; the global regression of dT on dSST and of dDIC - dALK on dSST and CUC.
 
 Usage (in the code folder of the production):
-    OA_RUN=u74 python test_state_constraint.py --data ../data/u74 [--reference OceanSODA] [--no-cells]
+    OA_RUN=u74 python test_state_constraint.py --data ../data/u74 [--area common] [--reference OceanSODA] [--no-cells]
 """
 import argparse
 import glob
@@ -39,6 +41,8 @@ from pathlib import Path
 import netCDF4
 import numpy as np
 
+import oa_config
+
 VARS = ('thetao', 'so', 'dissic', 'talk')
 X_MODEL, X_1750 = 284.317, 278.3
 CUC_SIG = 0.0          # the observed CUC uncertainty is counted with the mapping term (cuc_mapping_uncertainty.py);
@@ -46,11 +50,11 @@ CUC_SIG = 0.0          # the observed CUC uncertainty is counted with the mappin
 
 
 # ------------------------------------------------------------------------------------------------ data
-def cuc_map_sigma(data, ref):
-    """the mapping uncertainty of the observed CUC on the product's own area (cuc_mapping_uncertainty.py), for the
-    figure; NaN if not computed yet"""
+def cuc_map_sigma(data, ref, area='own'):
+    """the mapping uncertainty of the observed CUC on the product's own area or the common area
+    (cuc_mapping_uncertainty.py), for the figure; NaN if not computed yet"""
     p = Path(data) / 'product_uncertainty' / f'cuc_mapping_{ref}.npz'
-    return float(np.load(p)['own_sigma_cuc_C2']) if p.exists() else np.nan
+    return float(np.load(p)[f'{area}_sigma_cuc_C2']) if p.exists() else np.nan
 
 
 def window_drift(data, model, member, window, lat, lon):
@@ -183,11 +187,15 @@ def main():
     ap.add_argument('--data', required=True)
     ap.add_argument('--reference', nargs='+')
     ap.add_argument('--no-cells', action='store_true')
+    ap.add_argument('--area', choices=('own', 'common'), default='own',
+                    help="own: each product's own area; common: the common area of the paper's global constraint")
     a, _ = ap.parse_known_args()
     with open(Path(a.data) / 'constraint_results.pkl', 'rb') as f:
         PK = pickle.load(f)
-    for ref in a.reference or list(PK['results']):
-        R = PK['results'][ref]
+    key = 'results' if a.area == 'own' else 'results_common'
+    tag = '' if a.area == 'own' else '_common'
+    for ref in a.reference or list(PK[key]):
+        R = PK[key][ref]
         names = list(R['names'])
         n = len(names)
         obs, chg, lat, lon = read_changes(R, a.data, ref)
@@ -195,7 +203,7 @@ def main():
         ok = mask & np.all([np.isfinite(obs[v]) for v in VARS], 0) & np.all([np.all(np.isfinite(chg[v]), 0) for v in VARS], 0)
         chem = Chem(lat, lon, ok)
         ok = chem.ok
-        w_area = np.cos(np.deg2rad(lat))[:, None] * np.ones(ok.shape) * ok
+        w_area = oa_config.area_weights(lat, lon) * ok                # the weights of the chain
         gm = lambda f: float(np.nansum(np.where(ok, f, 0) * w_area) / w_area.sum())
         dT, CUC = np.asarray(R['dT'], 'f8'), np.asarray(R['CUC'], 'f8')
         dTo, dTs = float(R['dT_obs'][0]), float(R['dT_obs'][1])
@@ -249,16 +257,16 @@ def main():
         bC = np.linalg.lstsq(XC, gdc, rcond=None)[0]
         out = Path(a.data) / 'state_constraint'
         out.mkdir(exist_ok=True)
-        np.savez(out / f'state_{ref}.npz', names=np.array(names), dSST=dT, CUC=CUC, dT=G['thetao'], dS=G['so'],
+        np.savez(out / f'state_{ref}{tag}.npz', names=np.array(names), dSST=dT, CUC=CUC, dT=G['thetao'], dS=G['so'],
                  dDIC=G['dissic'], dALK=G['talk'], y1750=y, dSST_obs=dTo, dSST_obs_sigma=dTs, CUC_obs=CUo,
-                 CUC_obs_sigma=cuc_map_sigma(a.data, ref), direct=direct, direct_sigma=s_direct, state=gC,
+                 CUC_obs_sigma=cuc_map_sigma(a.data, ref, a.area), direct=direct, direct_sigma=s_direct, state=gC,
                  state_sigma=np.hypot(s_res, s_pred), state_sigma_models=s_res, state_sigma_predictors=s_pred,
                  unconstrained=y.mean(), unconstrained_sd=y.std(ddof=1), beta_dT=bT, beta_dC=bC,
                  dT_constrained=float(wT @ G['thetao']), dT_constrained_sigma=sigma_of(G['thetao'], wT, levT, XT, x0T, [dTs]),
                  dC_constrained=float(wC @ gdc), dC_constrained_sigma=sigma_of(gdc, wC, levC, XC, x0C, [dTs, CUC_SIG]))
         print(f'  global means: dT on dSST {bT[1]:.3f} degC/degC (R2 {1 - np.var(G["thetao"] - XT @ bT) / np.var(G["thetao"]):.2f}), '
               f'dDIC-dALK = {bC[0]:.1f} {bC[1]:+.2f} dSST {bC[2]:+.1f} CUC (R2 {1 - np.var(gdc - XC @ bC) / np.var(gdc):.2f}); '
-              f'saved {out / f"state_{ref}.npz"}')
+              f'saved {out / f"state_{ref}{tag}.npz"}')
 
         # leave-one-out, global
         e = {k: [] for k in ('u', 'direct', 'A', 'C')}

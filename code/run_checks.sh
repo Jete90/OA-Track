@@ -27,7 +27,7 @@ run() {   # name, command...
     local name=$1; shift
     ( "$@" > $C/$name.log 2>&1 && log "  done   $name" || log "  FAILED $name (see $C/$name.log)" ) &
 }
-run state       python -u test_state_constraint.py --data $DATA
+run state       python -u test_state_constraint.py --data $DATA --area common
 run loo         python -u test_constraint_loo.py --data $DATA
 run loo_changes python -u test_constraint_loo.py --data $DATA --mechanism --changes --no-cells
 run loo_mech    python -u test_constraint_loo.py --data $DATA --mechanism --no-cells

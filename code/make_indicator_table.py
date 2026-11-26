@@ -14,7 +14,8 @@ and two extra rows, the values of the paper:
 the constraint (model years and the 1750 state; none in product years), the mapping (C2, the conservative one, as the
 uncertainty budget), the equilibrium constants and the alkalinity adjustment (its full size, |alk - noalk|); then for
 the mean of the four sqrt(mean of the squares + spread^2), as the combined OA-Track files. The 2024 trend value takes
-the mapping and constants components of the product year 2024.
+the mapping and constants components of the product year 2024. The Revelle factor has no constants component (mocsy
+gives none).
 Columns: the 15 quantities, in the order of Jiang et al. (2023, Tables S5 to S8) with pCO2, CO2* and HCO3- added; CO2
 of the row (CMIP6, NOAA, AR6).
 Outputs (rc.FIGDIR, and with the manuscript names in rc.FIGDIR/manuscript):
@@ -47,6 +48,7 @@ HEAD = {'thetao': ('T', '°C'), 'so': ('S', ''), 'dic': ('DIC', 'µmol kg⁻¹')
         'co3': ('CO₃²⁻', 'µmol kg⁻¹'), 'hplus': ('[H⁺] total', 'nmol kg⁻¹'), 'hplus_free': ('[H⁺] free', 'nmol kg⁻¹'),
         'ph': ('pH', 'total scale'), 'omega_arag': ('Ωarag', ''), 'omega_calc': ('Ωcalc', ''), 'revelle': ('Revelle', '')}
 LEVELS = ('sigma_mapping_c2', 'sigma_constants')
+NO_CONSTANTS = ('revelle',)                        # mocsy gives no constants uncertainty for the Revelle factor
 DECADES = list(range(1750, 2021, 10)) + [EVAL_YEAR]
 
 
@@ -74,7 +76,8 @@ def per_product(ref):
                        float(rd(g, f'{p}_{EVAL_YEAR}_trend'))]
             con = np.r_[rd(f, f'{p}_global_state_sigma')[i17], rd(f, f'{p}_global_sigma')[mh], np.zeros(mo.sum()), 0.0]
             lev = sum(np.r_[rd(f, f'{p}_{lv}_state')[i17], rd(f, f'{p}_{lv}')[mh], rd(f, f'{p}_obs_{lv}')[mo],
-                            rd(f, f'{p}_obs_{lv}')[ko]] ** 2 for lv in LEVELS)
+                            rd(f, f'{p}_obs_{lv}')[ko]] ** 2 for lv in LEVELS
+                      if not (q in NO_CONSTANTS and lv == 'sigma_constants'))
             out[q] = (v, con ** 2 + lev + (v - v0) ** 2)
         co2 = np.r_[float(rd(f, 'state_xco2')[i17]), rd(f, 'xco2')[yh < SWITCH], rd(f, 'xco2_obs')[mo], np.nan]
         years = np.r_[yh[mh], yo[mo]]
